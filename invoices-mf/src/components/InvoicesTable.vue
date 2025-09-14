@@ -36,6 +36,7 @@ import { useI18n } from 'vue-i18n'
 const { t } = useI18n()
 
 const selectedProducts = ref<Invoice[]>([])
+
 const {
   isPending,
   isFetching,
