@@ -1,12 +1,13 @@
-<script setup lang="ts">
-import InvoicesTable from './components/InvoicesTable.vue'
-</script>
-
 <template>
-  <div class="container mx-auto p-4">
-    <h2 class="font-semibold text-xl my-7">Facturas</h2>
-    <InvoicesTable />
-  </div>
+  <nav>
+    <RouterLink to="/">Go to Home</RouterLink>
+    <RouterLink to="/form">Go to Form</RouterLink>
+  </nav>
+  <main>
+    <RouterView />
+  </main>
 </template>
 
-<style scoped></style>
+<script setup lang="ts">
+import { RouterView, RouterLink } from 'vue-router'
+</script>

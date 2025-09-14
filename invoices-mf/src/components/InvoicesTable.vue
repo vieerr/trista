@@ -15,10 +15,19 @@
         <Column
           v-for="col of columns"
           :key="col.field"
-          :field="col.field"
+          :field="t(col.field)"
           :header="t(col.header)"
           sortable
-        ></Column>
+        >
+          <template #body="slotProps">
+            <span v-if="col.translate">
+              {{ t(`invoices.${slotProps.data[col.field]}`) }}
+            </span>
+            <span v-else>
+              {{ slotProps.data[col.field] }}
+            </span>
+          </template>
+        </Column>
       </DataTable>
     </div>
   </div>
@@ -47,12 +56,12 @@ const {
 })
 
 const columns = ref([
-  { field: 'number', header: 'Invoice Number' },
-  { field: 'client', header: 'Client' },
-  { field: 'type', header: 'Type' },
-  { field: 'date', header: 'Date' },
-  { field: 'dueDate', header: 'Due Date' },
-  { field: 'amount', header: 'Amount' },
-  { field: 'status', header: 'Status' },
+  { field: 'number', header: 'Invoice Number', translate: false },
+  { field: 'client', header: 'Client', translate: false },
+  { field: 'type', header: 'Type', translate: true },
+  { field: 'date', header: 'Date', translate: false },
+  { field: 'dueDate', header: 'Due Date', translate: false },
+  { field: 'amount', header: 'Amount', translate: false },
+  { field: 'status', header: 'Status', translate: true }, // Mark this for translation
 ])
 </script>

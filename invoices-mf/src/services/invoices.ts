@@ -5,7 +5,7 @@ export const fetchInvoices = async (): Promise<Invoice[]> => {
     {
       number: 'INV001',
       client: 'Client A',
-      type: 'Services',
+      type: 'Simple',
       date: '2023-01-01',
       dueDate: '2023-01-15',
       amount: 1000,
@@ -14,7 +14,7 @@ export const fetchInvoices = async (): Promise<Invoice[]> => {
     {
       number: 'INV002',
       client: 'Client B',
-      type: 'Products',
+      type: 'Normal',
       date: '2023-02-01',
       dueDate: '2023-02-15',
       amount: 500,
@@ -23,7 +23,7 @@ export const fetchInvoices = async (): Promise<Invoice[]> => {
     {
       number: 'INV003',
       client: 'Client C',
-      type: 'Consulting',
+      type: 'Simple',
       date: '2023-03-01',
       dueDate: '2023-03-10',
       amount: 2000,
@@ -32,7 +32,7 @@ export const fetchInvoices = async (): Promise<Invoice[]> => {
     {
       number: 'INV004',
       client: 'Client D',
-      type: 'Maintenance',
+      type: 'Normal',
       date: '2023-04-01',
       dueDate: '2023-04-20',
       amount: 800,
@@ -41,7 +41,7 @@ export const fetchInvoices = async (): Promise<Invoice[]> => {
     {
       number: 'INV005',
       client: 'Client E',
-      type: 'Support',
+      type: 'Simple',
       date: '2023-05-01',
       dueDate: '2023-05-15',
       amount: 1500,
@@ -50,7 +50,7 @@ export const fetchInvoices = async (): Promise<Invoice[]> => {
     {
       number: 'INV006',
       client: 'Client F',
-      type: 'Development',
+      type: 'Normal',
       date: '2023-06-01',
       dueDate: '2023-06-25',
       amount: 7000,
@@ -59,7 +59,7 @@ export const fetchInvoices = async (): Promise<Invoice[]> => {
     {
       number: 'INV007',
       client: 'Client G',
-      type: 'Design',
+      type: 'Simple',
       date: '2023-07-01',
       dueDate: '2023-07-15',
       amount: 400,
@@ -68,7 +68,7 @@ export const fetchInvoices = async (): Promise<Invoice[]> => {
     {
       number: 'INV008',
       client: 'Client H',
-      type: 'Marketing',
+      type: 'Normal',
       date: '2023-08-01',
       dueDate: '2023-08-10',
       amount: 600,
@@ -77,7 +77,7 @@ export const fetchInvoices = async (): Promise<Invoice[]> => {
     {
       number: 'INV009',
       client: 'Client I',
-      type: 'Sales',
+      type: 'Simple',
       date: '2023-09-01',
       dueDate: '2023-09-20',
       amount: 300,
@@ -86,7 +86,7 @@ export const fetchInvoices = async (): Promise<Invoice[]> => {
     {
       number: 'INV010',
       client: 'Client J',
-      type: 'Training',
+      type: 'Normal',
       date: '2023-10-01',
       dueDate: '2023-10-15',
       amount: 900,
@@ -95,7 +95,7 @@ export const fetchInvoices = async (): Promise<Invoice[]> => {
     {
       number: 'INV011',
       client: 'Client K',
-      type: 'Logistics',
+      type: 'Simple',
       date: '2023-11-01',
       dueDate: '2023-11-30',
       amount: 1100,

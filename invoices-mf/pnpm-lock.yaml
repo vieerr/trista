@@ -11,12 +11,18 @@ importers:
       '@primeuix/themes':
         specifier: ^1.2.3
         version: 1.2.3
+      '@primevue/forms':
+        specifier: ^4.3.9
+        version: 4.3.9(vue@3.5.21(typescript@5.8.3))
       '@tailwindcss/vite':
         specifier: ^4.1.13
         version: 4.1.13(vite@7.1.5(@types/node@22.18.3)(jiti@2.5.1)(lightningcss@1.30.1))
       '@tanstack/vue-query':
         specifier: ^5.87.4
         version: 5.87.4(vue@3.5.21(typescript@5.8.3))
+      primeicons:
+        specifier: ^7.0.0
+        version: 7.0.0
       primevue:
         specifier: ^4.3.9
         version: 4.3.9(vue@3.5.21(typescript@5.8.3))
@@ -26,6 +32,12 @@ importers:
       vue-i18n:
         specifier: ^11.1.12
         version: 11.1.12(vue@3.5.21(typescript@5.8.3))
+      vue-router:
+        specifier: ^4.5.1
+        version: 4.5.1(vue@3.5.21(typescript@5.8.3))
+      zod:
+        specifier: ^4.1.8
+        version: 4.1.8
     devDependencies:
       '@tsconfig/node22':
         specifier: ^22.0.2
@@ -479,6 +491,10 @@ packages:
   '@polka/url@1.0.0-next.29':
     resolution: {integrity: sha512-wwQAWhWSuHaag8c4q/KN/vCoeOJYshAIvMQwD4GpSb3OiZklFfvAgmj0VCBBImRpuF/aFgIRzllXlVX93Jevww==}
 
+  '@primeuix/forms@0.1.0':
+    resolution: {integrity: sha512-LctcQidb+B5PuvAFWH24YH/SIzmHlOabLHpaTeGY/k51iBv1WyCp+5w9JMYuMB/BplSvV0ZGySxQVkN5Azr/aQ==}
+    engines: {node: '>=12.11.0'}
+
   '@primeuix/styled@0.7.2':
     resolution: {integrity: sha512-tIJ6byZezTYZ9YUICNSidQHOIQOQL3zeUgjwiX0JnBTK3+WCvy4DyCBcrJ94RtiX0WGFZSYNvaGaFkTo4jU8FQ==}
     engines: {node: '>=12.11.0'}
@@ -498,6 +514,10 @@ packages:
     engines: {node: '>=12.11.0'}
     peerDependencies:
       vue: ^3.5.0
+
+  '@primevue/forms@4.3.9':
+    resolution: {integrity: sha512-j/GGxFwpfzP3kdxpfxezmsWohmFjoiNHTZlDxGwrNBGrXfb9GExghgoPPKc0K4OeAX5enufS+g8YGqcglABHAQ==}
+    engines: {node: '>=12.11.0'}
 
   '@primevue/icons@4.3.9':
     resolution: {integrity: sha512-7EaVz7yS4KlAWppPsFEl9r2ia94LZStNjO2qiXolz0lvRYjZu6W66Or96sTr7GJhIIoE+qRnn3T9A/LeUmke6Q==}
@@ -1603,6 +1623,9 @@ packages:
     resolution: {integrity: sha512-4yf0QO/sllf/1zbZWYnvWw3NxCQwLXKzIj0G849LSufP15BXKM0rbD2Z3wVnkMfjdn/CB0Dpp444gYAACdsplg==}
     engines: {node: '>=18'}
 
+  primeicons@7.0.0:
+    resolution: {integrity: sha512-jK3Et9UzwzTsd6tzl2RmwrVY/b8raJ3QZLzoDACj+oTJ0oX7L9Hy+XnVwgo4QVKlKpnP/Ur13SXV/pVh4LzaDw==}
+
   primevue@4.3.9:
     resolution: {integrity: sha512-qEAm/ZwtfBJAxHBhmXxsZ4NM6StRDeMVg8146HBn1xZ+0wiYhhJXH4uEttBTBhUgRhmZ00n6bANiL+ib9ylNjg==}
     engines: {node: '>=12.11.0'}
@@ -1866,6 +1889,11 @@ packages:
     peerDependencies:
       vue: ^3.0.0
 
+  vue-router@4.5.1:
+    resolution: {integrity: sha512-ogAF3P97NPm8fJsE4by9dwSYtDwXIY1nFY9T6DyQnGHd1E2Da94w9JIolpe42LJGIl0DwOHBi8TcRPlPGwbTtw==}
+    peerDependencies:
+      vue: ^3.2.0
+
   vue-tsc@3.0.7:
     resolution: {integrity: sha512-BSMmW8GGEgHykrv7mRk6zfTdK+tw4MBZY/x6fFa7IkdXK3s/8hQRacPjG9/8YKFDIWGhBocwi6PlkQQ/93OgIQ==}
     hasBin: true
@@ -1916,6 +1944,9 @@ packages:
   yoctocolors@2.1.2:
     resolution: {integrity: sha512-CzhO+pFNo8ajLM2d2IW/R93ipy99LWjtwblvC1RsoSUMZgyLbYFr221TnSNT7GjGdYui6P459mw9JH/g/zW2ug==}
     engines: {node: '>=18'}
+
+  zod@4.1.8:
+    resolution: {integrity: sha512-5R1P+WwQqmmMIEACyzSvo4JXHY5WiAFHRMg+zBZKgKS+Q1viRa0C1hmUKtHltoIFKtIdki3pRxkmpP74jnNYHQ==}
 
 snapshots:
 
@@ -2294,6 +2325,10 @@ snapshots:
 
   '@polka/url@1.0.0-next.29': {}
 
+  '@primeuix/forms@0.1.0':
+    dependencies:
+      '@primeuix/utils': 0.6.1
+
   '@primeuix/styled@0.7.2':
     dependencies:
       '@primeuix/utils': 0.6.1
@@ -2313,6 +2348,14 @@ snapshots:
       '@primeuix/styled': 0.7.2
       '@primeuix/utils': 0.6.1
       vue: 3.5.21(typescript@5.8.3)
+
+  '@primevue/forms@4.3.9(vue@3.5.21(typescript@5.8.3))':
+    dependencies:
+      '@primeuix/forms': 0.1.0
+      '@primeuix/utils': 0.6.1
+      '@primevue/core': 4.3.9(vue@3.5.21(typescript@5.8.3))
+    transitivePeerDependencies:
+      - vue
 
   '@primevue/icons@4.3.9(vue@3.5.21(typescript@5.8.3))':
     dependencies:
@@ -3369,6 +3412,8 @@ snapshots:
     dependencies:
       parse-ms: 4.0.0
 
+  primeicons@7.0.0: {}
+
   primevue@4.3.9(vue@3.5.21(typescript@5.8.3)):
     dependencies:
       '@primeuix/styled': 0.7.2
@@ -3629,6 +3674,11 @@ snapshots:
       '@vue/devtools-api': 6.6.4
       vue: 3.5.21(typescript@5.8.3)
 
+  vue-router@4.5.1(vue@3.5.21(typescript@5.8.3)):
+    dependencies:
+      '@vue/devtools-api': 6.6.4
+      vue: 3.5.21(typescript@5.8.3)
+
   vue-tsc@3.0.7(typescript@5.8.3):
     dependencies:
       '@volar/typescript': 2.4.23
@@ -3668,3 +3718,5 @@ snapshots:
   yocto-queue@0.1.0: {}
 
   yoctocolors@2.1.2: {}
+
+  zod@4.1.8: {}
