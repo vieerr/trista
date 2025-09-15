@@ -1,10 +1,11 @@
 type InvoiceStatus = 'Paid' | 'Pending' | 'Overdue'
 
 export interface ProductRow {
-  id: number
+  id: string
   name: string
   quantity: number
   price: number
+  product: Product | null
   discount: number
   tax: { id: number; name: string; rate: number }
   reference?: string
@@ -21,7 +22,7 @@ export interface Invoice {
 }
 
 export interface Product {
-  id: number
+  id: string
   name: string
   reference?: string
   quantity?: number

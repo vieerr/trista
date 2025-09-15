@@ -104,6 +104,9 @@
         {{ t('invoices_form.add_row') }}</Button
       >
     </div>
+    <div>
+      <InvoicePriceDetail :rows="rows" />
+    </div>
   </div>
 </template>
 
@@ -114,11 +117,12 @@ import FloatLabel from 'primevue/floatlabel'
 import DataTable from 'primevue/datatable'
 import Column from 'primevue/column'
 import Select from 'primevue/select'
-import { ref, reactive } from 'vue'
+import { ref, reactive, type Reactive } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useQuery } from '@tanstack/vue-query'
 import { fetchProducts } from '@/services/products'
 import type { ProductRow, Product } from '@/types'
+import InvoicePriceDetail from './InvoicePriceDetail.vue'
 
 const { t } = useI18n()
 
@@ -132,10 +136,11 @@ const taxes = ref([
   { id: 3, name: 'No Tax', rate: 0 },
 ])
 
-const rows = reactive([
+const rows: Reactive<ProductRow[]> = reactive([
   {
-    id: Date.now(),
-    product: null as Product | null,
+    id: Date.now().toString(),
+    name: '',
+    product: null,
     quantity: 1,
     price: 0,
     discount: 0,
@@ -163,9 +168,10 @@ const onProductChange = (row: ProductRow, selectedProduct: Product) => {
 
 const addRow = () => {
   rows.push({
-    id: Date.now(),
-    product: null,
+    id: Date.now().toString(),
+    name: '',
     quantity: 1,
+    product: null,
     price: 0,
     discount: 0,
     tax: taxes.value[2], // Default to "No Tax"
@@ -173,7 +179,7 @@ const addRow = () => {
   })
 }
 
-const deleteRow = (id: number) => {
+const deleteRow = (id: string) => {
   const index = rows.findIndex((row) => row.id === id)
   if (index !== -1) {
     rows.splice(index, 1)
@@ -186,7 +192,22 @@ const calculateRowTotal = (row: ProductRow) => {
   return (priceAfterDiscount + taxAmount) * row.quantity
 }
 
-// const totalInvoice = computed(() => {
-//   return rows.reduce((sum, row) => sum + calculateRowTotal(row), 0)
-// })
+const getProductRows = () => {
+  const mappedRows = rows.map((row) => ({
+    id: row.id,
+    productId: row.product?.id,
+    productName: row.product?.name,
+    reference: row.reference,
+    price: row.price,
+    discount: row.discount,
+    taxRate: row.tax.rate,
+    taxName: row.tax.name,
+    quantity: row.quantity,
+    total: calculateRowTotal(row),
+  }))
+  console.log(mappedRows)
+  return mappedRows
+}
+
+defineExpose({ getProductRows })
 </script>

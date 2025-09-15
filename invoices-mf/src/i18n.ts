@@ -6,6 +6,7 @@ export const i18n = createI18n({
   fallbackLocale: 'en',
   messages: {
     es: {
+      save: 'Guardar',
       select: 'Seleccionar',
       invoices: {
         invoices: 'Facturas',

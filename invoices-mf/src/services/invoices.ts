@@ -106,6 +106,11 @@ export const fetchInvoices = async (): Promise<Invoice[]> => {
   return new Promise((resolve) => {
     setTimeout(() => {
       resolve(invoices)
-    }, 500) // Simulate 500ms delay
+    }, 300) // Simulate 300ms delay
   })
+}
+
+export const getInvoicesCount = async (): Promise<number> => {
+  const invoices = await fetchInvoices()
+  return invoices.length
 }
