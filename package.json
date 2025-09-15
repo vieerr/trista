@@ -4,10 +4,19 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build:remotes": "pnpm --parallel --filter=!'./shell' build",
+    "build:shell": "pnpm --filter='./shell' build",
+    "build:all": "pnpm run build:remotes && pnpm run build:shell",
+    "serve:remotes": "pnpm --parallel --filter=!'./shell' preview",
+    "dev:shell": "pnpm --filter='./shell' dev"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "packageManager": "pnpm@10.15.0"
+  "packageManager": "pnpm@10.15.0",
+  "workspaces": [
+    "shell",
+    "invoices-mf"
+  ]
 }
