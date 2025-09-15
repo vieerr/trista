@@ -11,7 +11,7 @@
   <Select style="display: none" />
   <DatePicker style="display: none" />
   <Message style="display: none" />
-  <Divider style="display: none" /> -->
+  <Divider style="display: none" />
 </template>
 
 <script setup lang="ts">

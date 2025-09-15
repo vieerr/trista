@@ -6,11 +6,20 @@ import i18n from "./i18n.service";
 import { VueQueryPlugin } from "@tanstack/vue-query";
 import PrimeVue from "primevue/config";
 import Aura from "@primeuix/themes/aura";
-await import("invoices_mf/invoices_css");
+try {
+  await import("invoices_mf/invoices_css");
+} catch (error) {
+  console.error("Error loading invoices CSS:", error);
+}
 createApp(App)
   .use(PrimeVue, {
     theme: {
       preset: Aura,
+      options: {
+        prefix: "p",
+        darkModeSelector: ".darktheme",
+        cssLayer: false,
+      },
     },
   })
   .use(router)

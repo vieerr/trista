@@ -8,5 +8,5 @@ module.exports = {
     "issues",
     "lerna",
   ],
-  scopes: ["general", "invoices-mf"],
+  scopes: ["general", "invoices-mf", "shell"],
 };
