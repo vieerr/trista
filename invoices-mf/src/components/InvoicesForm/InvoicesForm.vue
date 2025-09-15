@@ -84,16 +84,16 @@ import DatePicker from 'primevue/datepicker'
 import InputText from 'primevue/inputtext'
 import Button from 'primevue/button'
 import Message from 'primevue/message'
-import { onMounted, reactive, ref, watch, computed } from 'vue'
+import { onMounted, reactive, ref, watch, computed, provide } from 'vue'
 import { useToast } from 'primevue/usetoast'
 import { Form, type FormSubmitEvent } from '@primevue/forms'
 import { z } from 'zod'
 import { zodResolver } from '@primevue/forms/resolvers/zod'
 import { useI18n } from 'vue-i18n'
 import InvoicesFormTable from '@/components/InvoicesForm/InvoicesFormTable.vue'
-import { getInvoicesCount } from '@/services/invoices'
+import { createInvoice, getInvoicesCount } from '@/services/invoices'
 import moment from 'moment'
-import type { ProductRow } from '@/types'
+import type { Invoice, ProductRow } from '@/types'
 
 const toast = useToast()
 const { t } = useI18n()
@@ -186,11 +186,13 @@ const schema = z.object({
 
 const resolver = ref(zodResolver(schema))
 
+const total = ref(0)
+provide('total', total)
+
 const onFormSubmit = (e: FormSubmitEvent) => {
   console.log('Form submission event:', e)
 
   const productRows = tableRef.value.getProductRows() || []
-  console.log(productRows)
   formValues.products = productRows // Sync with form data
 
   const { success, error } = schema.safeParse(formValues)
@@ -199,12 +201,15 @@ const onFormSubmit = (e: FormSubmitEvent) => {
   const formData = {
     number: formValues.number,
     clientId: formValues.client?.id,
-    clientName: formValues.client?.name,
-    date: formValues.date,
+    client: formValues.client?.name,
+    date: moment(formValues.date).format('DD-MM-YYYY'),
+    type: 'Simple',
     'payment-method': formValues['payment-method'].value,
     'payment-period': formValues['payment-period'].value,
-    'due-date': formValues['due-date'],
+    'due-date': moment(formValues['due-date']).format('DD-MM-YYYY'),
     products: formValues.products,
+    amount: total.value,
+    status: 'Pending',
   }
 
   if (success) {
@@ -214,6 +219,7 @@ const onFormSubmit = (e: FormSubmitEvent) => {
       summary: 'Form is submitted.',
       life: 3000,
     })
+    createInvoice(formData as unknown as Invoice)
 
     // Submit formData to your API here
   } else {

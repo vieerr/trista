@@ -105,7 +105,7 @@
       >
     </div>
     <div>
-      <InvoicePriceDetail :rows="rows" />
+      <InvoicePriceDetail ref="priceDetailRef" :rows="rows" />
     </div>
   </div>
 </template>
@@ -117,7 +117,7 @@ import FloatLabel from 'primevue/floatlabel'
 import DataTable from 'primevue/datatable'
 import Column from 'primevue/column'
 import Select from 'primevue/select'
-import { ref, reactive, type Reactive } from 'vue'
+import { ref, reactive, type Reactive, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useQuery } from '@tanstack/vue-query'
 import { fetchProducts } from '@/services/products'
@@ -129,6 +129,7 @@ const { t } = useI18n()
 const { data: products } = useQuery({ queryKey: ['products'], queryFn: fetchProducts })
 
 const selectedProducts = ref([])
+const priceDetailRef = ref()
 
 const taxes = ref([
   { id: 1, name: 'IVA 20%', rate: 20 },
@@ -169,7 +170,6 @@ const onProductChange = (row: ProductRow, selectedProduct: Product) => {
 const addRow = () => {
   rows.push({
     id: Date.now().toString(),
-    name: '',
     quantity: 1,
     product: null,
     price: 0,
@@ -205,9 +205,12 @@ const getProductRows = () => {
     quantity: row.quantity,
     total: calculateRowTotal(row),
   }))
-  console.log(mappedRows)
   return mappedRows
 }
 
-defineExpose({ getProductRows })
+watch(priceDetailRef.value?.total, (newVal) => {
+  console.log('priceDetailRef changed:', newVal)
+})
+
+defineExpose({ getProductRows, total: priceDetailRef.value?.total })
 </script>

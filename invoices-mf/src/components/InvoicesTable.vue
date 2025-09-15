@@ -60,7 +60,7 @@ const columns = ref([
   { field: 'client', header: 'Client', translate: false },
   { field: 'type', header: 'Type', translate: true },
   { field: 'date', header: 'Date', translate: false },
-  { field: 'dueDate', header: 'Due Date', translate: false },
+  { field: 'due-date', header: 'Due Date', translate: false },
   { field: 'amount', header: 'Amount', translate: false },
   { field: 'status', header: 'Status', translate: true }, // Mark this for translation
 ])
