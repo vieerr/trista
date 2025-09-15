@@ -1,16 +1,19 @@
 import { defineConfig } from "vite";
 import vue from "@vitejs/plugin-vue";
 import federation from "@originjs/vite-plugin-federation";
+// import tailwindcss from "@tailwindcss/vite"
 export default defineConfig({
   plugins: [
     vue(),
+    // tailwindcss(),
     federation({
       name: "shell",
       filename: "remoteEntry.js",
       remotes: {
-        child: "http://localhost:4174/assets/remoteEntry.js", // Adjust port
+        invoices_mf: "http://localhost:4174/assets/remoteEntry.js", // Adjust port
+        // invoices_mf: "http://localhost:4175/assets/remoteEntry.js", // Adjust port
       },
-      shared: ["vue"], // Share Vue to avoid duplication
+      shared:["vue"]
     }),
   ],
   server: {

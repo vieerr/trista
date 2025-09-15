@@ -1,4 +1,5 @@
 <template>
+  <Toast />
   <div class="container mx-auto p-4 border-2 shadow-md border-gray-300 rounded-lg w-2/3">
     <Form
       v-slot="$form"
@@ -85,7 +86,7 @@ import InputText from 'primevue/inputtext'
 import Button from 'primevue/button'
 import Message from 'primevue/message'
 import { onMounted, reactive, ref, watch, computed, provide } from 'vue'
-import { useToast } from 'primevue/usetoast'
+// import { useToast } from 'primevue/usetoast'
 import { Form, type FormSubmitEvent } from '@primevue/forms'
 import { z } from 'zod'
 import { zodResolver } from '@primevue/forms/resolvers/zod'
@@ -94,8 +95,9 @@ import InvoicesFormTable from '@/components/InvoicesForm/InvoicesFormTable.vue'
 import { createInvoice, getInvoicesCount } from '@/services/invoices'
 import moment from 'moment'
 import type { Invoice, ProductRow } from '@/types'
+import { Toast } from 'primevue'
 
-const toast = useToast()
+// const toast = useToast()
 const { t } = useI18n()
 
 interface FormValues {
@@ -212,22 +214,22 @@ const onFormSubmit = (e: FormSubmitEvent) => {
     status: 'Pending',
   }
 
-  if (success) {
-    console.log('Form is valid with data:', formData)
-    toast.add({
-      severity: 'success',
-      summary: 'Form is submitted.',
-      life: 3000,
-    })
-    createInvoice(formData as unknown as Invoice)
+  // if (success) {
+  //   console.log('Form is valid with data:', formData)
+  //   toast.add({
+  //     severity: 'success',
+  //     summary: 'Form is submitted.',
+  //     life: 3000,
+  //   })
+  //   createInvoice(formData as unknown as Invoice)
 
-    // Submit formData to your API here
-  } else {
-    toast.add({
-      severity: 'error',
-      summary: 'Please fix validation errors',
-      life: 3000,
-    })
-  }
+  //   // Submit formData to your API here
+  // } else {
+  //   toast.add({
+  //     severity: 'error',
+  //     summary: 'Please fix validation errors',
+  //     life: 3000,
+  //   })
+  // }
 }
 </script>

@@ -51,3 +51,7 @@ export const i18n = createI18n({
     },
   },
 })
+
+export const exposeMessages = (locale: string) => {
+  return i18n.global.getLocaleMessage(locale)
+}

@@ -1,12 +1,14 @@
 <script setup lang="ts">
-import { defineAsyncComponent } from "vue";
+import { RouterView } from "vue-router";
+import "./style.css";
+import TreeShakeSurvivors from "./components/TreeShakeSurvivors.vue";
+// import { setupI18n } from "./i18n.service";
 
-const Child = defineAsyncComponent(() => import("child/Main"));
 </script>
 
 <template>
-  <h2>Shell Application</h2>
-  <Child />
+  <h2 class="font-bold ">Shell Application</h2>
+  <TreeShakeSurvivors />
+  <RouterView />
 </template>
 
-<style scoped></style>
