@@ -6,6 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build:remotes": "pnpm --parallel --filter=!'./shell' build",
+    "build:invoices-mf:watch": "pnpm --filter='./invoices-mf' build -- --watch",
     "build:shell": "pnpm --filter='./shell' build",
     "build:all": "pnpm run build:remotes && pnpm run build:shell",
     "serve:remotes": "pnpm --parallel --filter=!'./shell' preview",

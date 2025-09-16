@@ -13,7 +13,7 @@ export default defineConfig({
         invoices_mf: "http://localhost:4174/assets/remoteEntry.js", // Adjust port
         // invoices_mf: "http://localhost:4175/assets/remoteEntry.js", // Adjust port
       },
-      shared:["vue"]
+      shared:["vue", "@tanstack/vue-query", "vue-router"]
     }),
   ],
   server: {

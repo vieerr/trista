@@ -6,10 +6,7 @@ import {
 // import App from "./App.vue";
 
 let routes: RouteRecordRaw[] = [
-  // {
-  //   path: "/",
-  //   component: App,
-  // },
+
 ];
 
 try {
