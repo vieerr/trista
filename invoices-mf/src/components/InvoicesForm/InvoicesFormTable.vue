@@ -15,7 +15,7 @@
                 name="product-service"
                 variant="filled"
                 editable
-                :options="products"
+                :options="productOptions"
                 optionLabel="name"
                 v-model="slotProps.data.product"
                 @change="onProductChange(slotProps.data, $event.value)"
@@ -117,7 +117,7 @@ import FloatLabel from 'primevue/floatlabel'
 import DataTable from 'primevue/datatable'
 import Column from 'primevue/column'
 import Select from 'primevue/select'
-import { ref, reactive, type Reactive, watch } from 'vue'
+import { ref, reactive, type Reactive, watch, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useQuery } from '@tanstack/vue-query'
 import { fetchProducts } from '@/services/products'
@@ -127,6 +127,8 @@ import InvoicePriceDetail from './InvoicePriceDetail.vue'
 const { t } = useI18n()
 
 const { data: products } = useQuery({ queryKey: ['products'], queryFn: fetchProducts })
+
+const productOptions = computed(() => products.value ?? [])
 
 const selectedProducts = ref([])
 const priceDetailRef = ref()

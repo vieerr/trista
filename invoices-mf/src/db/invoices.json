@@ -5,7 +5,7 @@
     "type": "Simple",
     "paymentMethod": "Bank Transfer",
     "date": "2025-01-05",
-    "due-date": "2025-01-19",
+    "due_date": "2025-01-19",
     "amount": 360,
     "products": [
       {
@@ -33,7 +33,7 @@
     "type": "Simple",
     "paymentMethod": "Credit Card",
     "date": "2025-02-01",
-    "due-date": "2025-02-15",
+    "due_date": "2025-02-15",
     "amount": 440,
     "products": [
       {
@@ -61,7 +61,7 @@
     "type": "Simple",
     "paymentMethod": "PayPal",
     "date": "2025-03-10",
-    "due-date": "2025-03-24",
+    "due_date": "2025-03-24",
     "amount": 150,
     "products": [
       {
@@ -89,7 +89,7 @@
     "type": "Simple",
     "paymentMethod": "Bank Transfer",
     "date": "2025-04-15",
-    "due-date": "2025-04-29",
+    "due_date": "2025-04-29",
     "amount": 108,
     "products": [
       {
@@ -117,7 +117,7 @@
     "type": "Simple",
     "paymentMethod": "Credit Card",
     "date": "2025-05-20",
-    "due-date": "2025-06-03",
+    "due_date": "2025-06-03",
     "amount": 720,
     "products": [
       {
@@ -145,7 +145,7 @@
     "type": "Simple",
     "paymentMethod": "PayPal",
     "date": "2025-06-01",
-    "due-date": "2025-06-15",
+    "due_date": "2025-06-15",
     "amount": 510,
     "products": [
       {
@@ -189,7 +189,7 @@
     "type": "Simple",
     "paymentMethod": "Bank Transfer",
     "date": "2025-07-10",
-    "due-date": "2025-07-24",
+    "due_date": "2025-07-24",
     "amount": 216,
     "products": [
       {
@@ -217,7 +217,7 @@
     "type": "Simple",
     "paymentMethod": "Credit Card",
     "date": "2025-08-05",
-    "due-date": "2025-08-19",
+    "due_date": "2025-08-19",
     "amount": 200,
     "products": [
       {
@@ -245,7 +245,7 @@
     "type": "Simple",
     "paymentMethod": "PayPal",
     "date": "2025-09-01",
-    "due-date": "2025-09-15",
+    "due_date": "2025-09-15",
     "amount": 378,
     "products": [
       {
@@ -289,7 +289,7 @@
     "type": "Simple",
     "paymentMethod": "Bank Transfer",
     "date": "2025-10-10",
-    "due-date": "2025-10-24",
+    "due_date": "2025-10-24",
     "amount": 180,
     "products": [
       {
@@ -317,7 +317,7 @@
     "type": "Simple",
     "paymentMethod": "Credit Card",
     "date": "2025-11-01",
-    "due-date": "2025-11-15",
+    "due_date": "2025-11-15",
     "amount": 440,
     "products": [
       {
@@ -345,7 +345,7 @@
     "type": "Simple",
     "paymentMethod": "PayPal",
     "date": "2025-12-05",
-    "due-date": "2025-12-19",
+    "due_date": "2025-12-19",
     "amount": 270,
     "products": [
       {
@@ -389,7 +389,7 @@
     "type": "Simple",
     "paymentMethod": "Bank Transfer",
     "date": "2026-01-10",
-    "due-date": "2026-01-24",
+    "due_date": "2026-01-24",
     "amount": 144,
     "products": [
       {
@@ -417,7 +417,7 @@
     "type": "Simple",
     "paymentMethod": "Credit Card",
     "date": "2026-02-01",
-    "due-date": "2026-02-15",
+    "due_date": "2026-02-15",
     "amount": 90,
     "products": [
       {
@@ -445,7 +445,7 @@
     "type": "Simple",
     "paymentMethod": "PayPal",
     "date": "2026-03-05",
-    "due-date": "2026-03-19",
+    "due_date": "2026-03-19",
     "amount": 594,
     "products": [
       {

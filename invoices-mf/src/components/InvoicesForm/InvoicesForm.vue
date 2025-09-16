@@ -1,13 +1,20 @@
 <template>
   <Toast />
-  <div class="container mx-auto p-4 border-2 shadow-md border-gray-300 rounded-lg w-2/3">
+  <!-- <div class="corner-div relative p-4 bg-white rounded-lg overflow-hidden shadow-md shadow-t-0">
+    <p>Content inside the div</p>
+  </div> -->
+  <div class="corner-div relative p-4 bg-white-100 bg-white rounded-md shadow-md overflow-hidden">
     <Form
       v-slot="$form"
       :initialValues="formValues"
       :resolver="resolver"
       @submit="onFormSubmit"
-      class="w-full p-5 mx-auto"
+      class="w-full p-5 mx-auto bg-white"
     >
+      <h2 class="text-lg font-mono font-thin text-center text-gray-700 py-10">
+        Super Awesome Company
+      </h2>
+
       <div class="flex justify-between gap-4">
         <Fieldset legend="Cliente" class="flex flex-col w-full gap-4">
           <FloatLabel variant="on" class="my-3">
@@ -42,8 +49,8 @@
 
           <FloatLabel variant="on" class="my-3">
             <Select
-              name="payment-method"
-              v-model="formValues['payment-method']"
+              name="payment_method"
+              v-model="formValues['payment_method']"
               :options="[
                 { label: t('payment_methods.cash'), value: 'cash' },
                 { label: t('payment_methods.credit_card'), value: 'credit_card' },
@@ -52,21 +59,21 @@
               optionLabel="label"
               fluid
             />
-            <label for="payment-method">{{ t('payment_method') }}</label>
+            <label for="payment_method">{{ t('payment_method') }}</label>
           </FloatLabel>
           <FloatLabel variant="on" class="my-3">
             <Select
-              name="payment-period"
+              name="payment_period"
               :options="paymentPeriodOptions"
               optionLabel="label"
               fluid
               v-model="selectedPaymentPeriod"
             />
-            <label for="payment-period">{{ t('payment_period') }}</label>
+            <label for="payment_period">{{ t('payment_period') }}</label>
           </FloatLabel>
           <FloatLabel variant="on" class="my-3">
-            <DatePicker name="due-date" :modelValue="dueDate" fluid />
-            <label for="due-date">{{ t('due_date') }}</label>
+            <DatePicker name="due_date" :modelValue="dueDate" fluid />
+            <label for="due_date">{{ t('invoices_form.due_date') }}</label>
           </FloatLabel>
         </Fieldset>
       </div>
@@ -96,6 +103,7 @@ import { createInvoice, getInvoicesCount } from '@/services/invoices'
 import moment from 'moment'
 import type { Invoice, ProductRow } from '@/types'
 import { Toast } from 'primevue'
+import { useMutation } from '@tanstack/vue-query'
 
 // const toast = useToast()
 const { t } = useI18n()
@@ -104,9 +112,9 @@ interface FormValues {
   number: string
   client: { name: string; id: string } | null
   date: Date
-  'payment-method': { label: string; value: string }
-  'payment-period': { label: string; value: string }
-  'due-date': Date
+  payment_method: { label: string; value: string }
+  payment_period: { label: string; value: string }
+  due_date: Date
   products: ProductRow[]
 }
 
@@ -139,17 +147,17 @@ const formValues = reactive<FormValues>({
   number: '999',
   client: null,
   date: new Date(),
-  'payment-method': {
+  payment_method: {
     label: t('payment_methods.cash'),
     value: 'cash',
   },
-  'payment-period': selectedPaymentPeriod.value,
-  'due-date': dueDate.value,
+  payment_period: selectedPaymentPeriod.value,
+  due_date: dueDate.value,
   products: [] as ProductRow[],
 })
 
 watch(selectedPaymentPeriod, (newPeriod) => {
-  formValues['due-date'] = moment().add(parseInt(newPeriod.value), 'days').toDate()
+  formValues['due_date'] = moment().add(parseInt(newPeriod.value), 'days').toDate()
 })
 
 onMounted(async () => {
@@ -169,14 +177,14 @@ const schema = z.object({
       message: 'Cliente es requerido',
     }),
   date: z.date().optional(),
-  'payment-method': z.object({ label: z.string(), value: z.string() }).optional(),
-  'payment-period': z
+  payment_method: z.object({ label: z.string(), value: z.string() }).optional(),
+  payment_period: z
     .object({
       label: z.string(),
       value: z.string(),
     })
     .optional(),
-  'due-date': z.date().optional(),
+  due_date: z.date().optional(),
   products: z
     .array(
       z.object({
@@ -190,6 +198,14 @@ const resolver = ref(zodResolver(schema))
 
 const total = ref(0)
 provide('total', total)
+
+const { mutate: createInvoiceMutation } = useMutation({
+  mutationFn: (newInvoice: Invoice) => createInvoice(newInvoice),
+  onSuccess: () => {
+    // Invalidate and refetch
+    console.log('Invoice created successfully')
+  },
+})
 
 const onFormSubmit = (e: FormSubmitEvent) => {
   console.log('Form submission event:', e)
@@ -206,30 +222,45 @@ const onFormSubmit = (e: FormSubmitEvent) => {
     client: formValues.client?.name,
     date: moment(formValues.date).format('DD-MM-YYYY'),
     type: 'Simple',
-    'payment-method': formValues['payment-method'].value,
-    'payment-period': formValues['payment-period'].value,
-    'due-date': moment(formValues['due-date']).format('DD-MM-YYYY'),
+    payment_method: formValues['payment_method'].value,
+    payment_period: formValues['payment_period'].value,
+    due_date: moment(formValues['due_date']).format('DD-MM-YYYY'),
     products: formValues.products,
     amount: total.value,
     status: 'Pending',
   }
 
-  // if (success) {
-  //   console.log('Form is valid with data:', formData)
-  //   toast.add({
-  //     severity: 'success',
-  //     summary: 'Form is submitted.',
-  //     life: 3000,
-  //   })
-  //   createInvoice(formData as unknown as Invoice)
+  if (success) {
+    //   console.log('Form is valid with data:', formData)
+    //   toast.add({
+    //     severity: 'success',
+    //     summary: 'Form is submitted.',
+    //     life: 3000,
+    //   })
+    createInvoiceMutation(formData as unknown as Invoice)
 
-  //   // Submit formData to your API here
-  // } else {
-  //   toast.add({
-  //     severity: 'error',
-  //     summary: 'Please fix validation errors',
-  //     life: 3000,
-  //   })
-  // }
+    //   // Submit formData to your API here
+  } else {
+    //   toast.add({
+    //     severity: 'error',
+    //     summary: 'Please fix validation errors',
+    //     life: 3000,
+    //   })
+  }
 }
 </script>
+<style scoped>
+.corner-div::after {
+  content: '';
+  border-width: 0 40px 42px 0;
+  border-color: #000000 #fff #dadada #ffffff;
+  border-bottom-left-radius: 0.375rem;
+  background-color: white;
+  width: 0;
+  display: block;
+  position: absolute;
+  top: 0;
+  right: 0;
+  box-shadow: -3px 3px 5px #f1f5f9;
+}
+</style>

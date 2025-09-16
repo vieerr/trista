@@ -38,6 +38,8 @@ export const i18n = createI18n({
         '2_months': '2 Meses',
       },
       invoices_form: {
+        title: 'Nueva factura simplificada',
+        description: '¡En cuestión de segundos!',
         search_product_service: 'Buscar Producto/Servicio',
         product_service: 'Producto/Servicio',
         reference: 'Referencia',
@@ -47,6 +49,11 @@ export const i18n = createI18n({
         quantity: 'Cantidad',
         total: 'Total',
         add_row: 'Añadir Fila',
+        due_date: 'Fecha de Vencimiento',
+      },
+      invoices_table: {
+        title: 'Facturas',
+        description: 'Gestiona todas tus facturas en un solo lugar.',
       },
     },
   },

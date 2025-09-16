@@ -5,7 +5,7 @@ import PrimeVue from 'primevue/config'
 import Aura from '@primeuix/themes/aura'
 import { VueQueryPlugin } from '@tanstack/vue-query'
 import { i18n } from './i18n'
-import { router } from './router'
+import { router } from './router/router'
 import { ToastService } from 'primevue'
 
 createApp(App)

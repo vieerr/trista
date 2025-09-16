@@ -6,12 +6,12 @@ import type { RouteRecordRaw } from 'vue-router'
 const routes: RouteRecordRaw[] = [
   {
     path: '/',
-    name: 'Home',
+    name: 'InvoicesTable',
     component: TableView,
   },
   {
-    path: '/about',
-    name: 'About',
+    path: '/add',
+    name: 'AddInvoice',
     component: FormView,
   },
   {
