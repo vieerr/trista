@@ -15,8 +15,8 @@
         <Column
           v-for="col of columns"
           :key="col.field"
-          :field="t(col.field)"
-          :header="t(col.header)"
+          :field="t(`invoices.${col.field}`)"
+          :header="col.header"
           sortable
         >
           <template #body="slotProps">
@@ -56,12 +56,12 @@ const {
 })
 
 const columns = ref([
-  { field: 'number', header: 'Invoice Number', translate: false },
-  { field: 'client', header: 'Client', translate: false },
-  { field: 'type', header: 'Type', translate: true },
-  { field: 'date', header: 'Date', translate: false },
-  { field: 'due_date', header: 'Due Date', translate: false },
-  { field: 'amount', header: 'Amount', translate: false },
-  { field: 'status', header: 'Status', translate: true }, // Mark this for translation
+  { field: 'number', header: t('invoices.Invoice Number'), translate: false },
+  { field: 'client', header: t('invoices.Client'), translate: false },
+  { field: 'type', header: t('invoices.Type'), translate: true },
+  { field: 'date', header: t('invoices.Date'), translate: false },
+  { field: 'due_date', header: t('invoices.Due Date'), translate: false },
+  { field: 'amount', header: t('invoices.Amount'), translate: false },
+  { field: 'status', header: t('invoices.Status'), translate: true }, // Mark this for translation
 ])
 </script>

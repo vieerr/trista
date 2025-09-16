@@ -3,7 +3,7 @@ import { createI18n } from 'vue-i18n'
 export const i18n = createI18n({
   legacy: false,
   locale: 'es',
-  fallbackLocale: 'en',
+  fallbackLocale: 'es',
   messages: {
     es: {
       save: 'Guardar',
@@ -22,6 +22,14 @@ export const i18n = createI18n({
         Overdue: 'Atrasado',
         Simple: 'Simplificada',
         Normal: 'Ordinaria',
+        client: 'Cliente',
+        type: 'Tipo',
+        date: 'Fecha',
+        amount: 'Cantidad',
+        status: 'Estado',
+        number: 'Número',
+        actions: 'Acciones',
+        due_date: 'Fecha de Vencimiento',
       },
       payment_method: 'Método de Pago',
       payment_methods: {
