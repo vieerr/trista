@@ -60,7 +60,6 @@
 <script setup lang="ts">
 import Menu from "primevue/menu";
 import Avatar from "primevue/avatar";
-import Ripple from "primevue/ripple";
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { Button } from "primevue";
