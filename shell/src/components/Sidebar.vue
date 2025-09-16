@@ -77,7 +77,7 @@ const menuItems = ref([
     icon: "pi pi-receipt",
     command: () => router.push("/invoices"),
     createButton: true,
-    createCommand: () => router.push("/invoices/about"),
+    createCommand: () => router.push("/invoices/add"),
   },
 ]);
 </script>
