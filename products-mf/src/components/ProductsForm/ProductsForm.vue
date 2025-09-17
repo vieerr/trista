@@ -1,0 +1,222 @@
+<template>
+  <Toast />
+  <div class="flex gap-6">
+    <!-- Left Side Form -->
+    <div class="flex-1 bg-white rounded-md shadow-md p-6">
+      <h3 class="text-gray-700 text-lg font-semibold mb-6">Información general</h3>
+
+      <Form
+        :initialValues="formValues"
+        :resolver="resolver"
+        @submit="onFormSubmit"
+        class="space-y-6"
+      >
+        <!-- Tipo de ítem -->
+        <div>
+          <label class="block text-sm font-medium text-gray-600 mb-2">Tipo de ítem *</label>
+          <div class="flex gap-4">
+            <Button
+              :outlined="formValues.type !== 'Producto'"
+              :label="'Producto'"
+              @click="formValues.type = 'Producto'"
+              class="w-32"
+            />
+            <Button
+              :outlined="formValues.type !== 'Servicio'"
+              :label="'Servicio'"
+              @click="formValues.type = 'Servicio'"
+              class="w-32"
+            />
+          </div>
+          <p class="text-xs text-gray-400 mt-2">
+            Ten en cuenta que, una vez creado, no podrás cambiar el tipo de ítem.
+          </p>
+        </div>
+
+        <!-- Nombre -->
+        <div>
+          <label for="name" class="block text-sm font-medium text-gray-600 mb-1">Nombre *</label>
+          <InputText
+            v-model="formValues.name"
+            id="name"
+            name="name"
+            placeholder="Escribe el nombre"
+            class="w-full"
+          />
+        </div>
+
+        <!-- Unidad de medida -->
+        <div>
+          <label for="unit" class="block text-sm font-medium text-gray-600 mb-1"
+            >Unidad de medida *</label
+          >
+          <Select v-model="formValues.unit" :options="units" id="unit" class="w-full" />
+        </div>
+
+        <!-- Referencia -->
+        <div>
+          <label for="reference" class="block text-sm font-medium text-gray-600 mb-1"
+            >Referencia</label
+          >
+          <InputText
+            v-model="formValues.reference"
+            id="reference"
+            name="reference"
+            class="w-full"
+          />
+        </div>
+
+        <!-- Precios -->
+        <div class="grid grid-cols-3 gap-4">
+          <div>
+            <label for="price" class="block text-sm font-medium text-gray-600 mb-1"
+              >Precio base *</label
+            >
+            <InputNumber
+              inputId="currency-us"
+              id="price"
+              name="price"
+              mode="currency"
+              currency="USD"
+              locale="en-US"
+              fluid
+              v-model="formValues.price"
+            />
+          </div>
+          <div>
+            <label for="tax" class="block text-sm font-medium text-gray-600 mb-1">Impuesto *</label>
+            <Select
+              v-model="formValues.tax"
+              :options="taxes"
+              optionLabel="name"
+              id="tax"
+              class="w-full"
+            />
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-600 mb-1">Precio Total *</label>
+            <InputNumber
+              v-model="computedTotal"
+              mode="currency"
+              currency="USD"
+              locale="en-US"
+              fluid
+              readonly
+              class="w-full bg-gray-100"
+            />
+          </div>
+        </div>
+
+        <!-- Descripción -->
+        <div>
+          <label for="description" class="block text-sm font-medium text-gray-600 mb-1"
+            >Descripción</label
+          >
+          <Textarea v-model="formValues.description" id="description" rows="3" class="w-full" />
+        </div>
+
+        <!-- Buttons -->
+        <div class="flex justify-end gap-3 pt-4">
+          <!-- <Button label="Cancelar" outlined class="w-32"  /> -->
+          <Button icon="pi pi-save" type="submit" :label="t('products_form.save')" class="w-32" />
+          <!-- <Button type="submit" label="Guardar y crear o tro" outlined class="w-48" /> -->
+        </div>
+      </Form>
+    </div>
+
+    <!-- Right Side Preview -->
+    <div class="w-72 bg-white rounded-md shadow-md flex flex-col items-center p-6">
+      <ImageForm ref="imageForm" />
+      <p class="text-gray-600 font-medium">{{ formValues.name || 'Producto sin nombre' }}</p>
+      <p class="text-lg font-semibold text-gray-800">$ {{ computedTotal }}</p>
+    </div>
+  </div>
+</template>
+
+<script lang="ts" setup>
+import ImageForm from './ImageForm.vue'
+import { reactive, computed, ref } from 'vue'
+import { Form } from '@primevue/forms'
+import InputText from 'primevue/inputtext'
+import Textarea from 'primevue/textarea'
+import Select from 'primevue/select'
+import Button from 'primevue/button'
+import Toast from 'primevue/toast'
+import { zodResolver } from '@primevue/forms/resolvers/zod'
+import { productValidator } from '@/validators/ProductValidator'
+import InputNumber from 'primevue/inputnumber'
+import { useI18n } from 'vue-i18n'
+import { useMutation } from '@tanstack/vue-query'
+import { createProduct } from '@/services/products'
+import type { Product } from '@/types'
+interface FormValues {
+  type: 'Producto' | 'Servicio'
+  name: string
+  unit: string
+  reference: string
+  price: number
+  tax: { name: string; rate: number } | null
+  description: string
+  image: File | null
+}
+
+const { t } = useI18n()
+const imageForm = ref()
+
+const units = ref(['Unidad', 'Litro', 'Kilogramo', 'Metro', 'Caja'])
+
+const taxes = ref([
+  { name: 'IVA 0%', rate: 0 },
+  { name: 'IVA 12%', rate: 12 },
+  { name: 'IVA 15%', rate: 15 },
+])
+
+const formValues = reactive<FormValues>({
+  type: 'Producto',
+  name: '',
+  unit: '',
+  reference: '',
+  price: 0,
+  tax: null,
+  description: '',
+  image: null,
+})
+
+const resolver = ref(zodResolver(productValidator))
+
+const computedTotal = computed(() => {
+  if (!formValues.tax) return Number(formValues.price.toFixed(2))
+  const taxAmount = (formValues.price * formValues.tax.rate) / 100
+  return parseFloat((formValues.price + taxAmount).toFixed(2))
+})
+
+const { mutate: createProductMutation } = useMutation({
+  mutationFn: (newProduct: Product) => createProduct(newProduct),
+  onSuccess: () => {
+    // Invalidate and refetch
+    console.log('Product created successfully')
+  },
+})
+
+const onFormSubmit = () => {
+  const { success, error } = productValidator.safeParse(formValues)
+  console.log(success)
+  console.error(error)
+  const formData = {
+    type: formValues.type,
+    name: formValues.name,
+    unit: formValues.unit,
+    reference: formValues.reference,
+    price: formValues.price,
+    tax: formValues.tax ? formValues.tax.name : null,
+    total: computedTotal.value,
+    description: formValues.description,
+    image: imageForm.value?.files[0] || null,
+  }
+
+  if (success) {
+    createProductMutation(formData as unknown as Product)
+  }
+  console.log('Form Data:', formData)
+}
+</script>

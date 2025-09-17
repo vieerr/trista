@@ -23,6 +23,12 @@ export const i18n = createI18n({
         noProducts: 'No se han encontrado productos.',
         loading: 'Cargando productos. Por favor, espere.',
       },
+      products_form: {
+        title: 'Nuevo producto o servicio',
+        description: 'Crea productos y/o servicios que podrás vender a tus clientes.',
+        selectImage: 'Seleccionar imagen',
+        save: 'Guardar ',
+      },
     },
   },
 })

@@ -1,3 +1,4 @@
+import ProductsFormView from '@/views/ProductsFormView.vue'
 import ProductsTableView from '@/views/ProductsTableView.vue'
 import { createRouter, createWebHistory } from 'vue-router'
 
@@ -8,6 +9,11 @@ const router = createRouter({
       path: '/',
       name: 'ProductsTable',
       component: ProductsTableView,
+    },
+    {
+      path: '/add',
+      name: 'AddProduct',
+      component: ProductsFormView,
     },
   ],
 })
