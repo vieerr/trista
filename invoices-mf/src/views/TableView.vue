@@ -18,7 +18,7 @@ const goToCreation = () => {
     <template #title>
       <h2 class="mb-4 text-xl">
         {{ t('invoices_table.title') }}
-        <i class="pi pi-receipt ml-2 rotate-12 text-4xl" style="font-size: 1.5rem"></i>
+        <i class="pi pi-receipt ml-2 text-4xl" style="font-size: 1.5rem"></i>
       </h2>
     </template>
     <template #content>

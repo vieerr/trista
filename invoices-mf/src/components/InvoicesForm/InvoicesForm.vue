@@ -95,7 +95,6 @@ import Message from 'primevue/message'
 import { onMounted, reactive, ref, watch, computed, provide } from 'vue'
 // import { useToast } from 'primevue/usetoast'
 import { Form, type FormSubmitEvent } from '@primevue/forms'
-import { z } from 'zod'
 import { zodResolver } from '@primevue/forms/resolvers/zod'
 import { useI18n } from 'vue-i18n'
 import InvoicesFormTable from '@/components/InvoicesForm/InvoicesFormTable.vue'
@@ -104,6 +103,7 @@ import moment from 'moment'
 import type { Invoice, ProductRow } from '@/types'
 import { Toast } from 'primevue'
 import { useMutation } from '@tanstack/vue-query'
+import { invoiceSchema } from '@/validators/InvoicesValidator'
 
 // const toast = useToast()
 const { t } = useI18n()
@@ -165,35 +165,7 @@ onMounted(async () => {
 })
 
 // Define Zod schema
-const schema = z.object({
-  number: z.string().min(1, { message: 'Número es requerido' }),
-  client: z
-    .object({
-      name: z.string(),
-      id: z.string(),
-    })
-    // .nullable()
-    .refine((val) => val !== null, {
-      message: 'Cliente es requerido',
-    }),
-  date: z.date().optional(),
-  payment_method: z.object({ label: z.string(), value: z.string() }).optional(),
-  payment_period: z
-    .object({
-      label: z.string(),
-      value: z.string(),
-    })
-    .optional(),
-  due_date: z.date().optional(),
-  products: z
-    .array(
-      z.object({
-        _id: z.string(),
-      }),
-    )
-    .min(1, { message: 'Al menos un producto es requerido' }),
-})
-
+const schema = invoiceSchema
 const resolver = ref(zodResolver(schema))
 
 const total = ref(0)
@@ -232,11 +204,11 @@ const onFormSubmit = (e: FormSubmitEvent) => {
 
   if (success) {
     //   console.log('Form is valid with data:', formData)
-    //   toast.add({
-    //     severity: 'success',
-    //     summary: 'Form is submitted.',
-    //     life: 3000,
-    //   })
+    // toast.add({
+    //   severity: 'success',
+    //   summary: 'Form is submitted.',
+    //   life: 3000,
+    // })
     createInvoiceMutation(formData as unknown as Invoice)
 
     //   // Submit formData to your API here

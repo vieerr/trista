@@ -9,7 +9,7 @@ const { t } = useI18n()
   <Card class="mb-5" shadow="shadow-2">
     <template #title>
       {{ t('invoices_form.title') }}
-      <i class="pi pi-receipt ml-2 rotate-12 text-4xl" style="font-size: 1.5rem"></i>
+      <i class="pi pi-receipt ml-2 text-4xl" style="font-size: 1.5rem"></i>
     </template>
     <template #content>
       <p class="m-0">
