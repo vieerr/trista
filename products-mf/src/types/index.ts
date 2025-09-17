@@ -1,8 +1,11 @@
 export interface Product {
-  id: string
+  _id?: string
   name: string
+  type: string
   reference?: string
+  unit: string
   price: number
-  taxRate?: number
-  taxName: string
+  tax: object,
+  description?: string
+  image?: File | null
 }

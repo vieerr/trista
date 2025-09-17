@@ -135,7 +135,7 @@
 
 <script lang="ts" setup>
 import ImageForm from './ImageForm.vue'
-import { reactive, computed, ref } from 'vue'
+import { reactive, computed, ref, watch } from 'vue'
 import { Form } from '@primevue/forms'
 import InputText from 'primevue/inputtext'
 import Textarea from 'primevue/textarea'
@@ -148,7 +148,6 @@ import InputNumber from 'primevue/inputnumber'
 import { useI18n } from 'vue-i18n'
 import { useMutation } from '@tanstack/vue-query'
 import { createProduct } from '@/services/products'
-import type { Product } from '@/types'
 interface FormValues {
   type: 'Producto' | 'Servicio'
   name: string
@@ -191,32 +190,45 @@ const computedTotal = computed(() => {
 })
 
 const { mutate: createProductMutation } = useMutation({
-  mutationFn: (newProduct: Product) => createProduct(newProduct),
+  mutationFn: (newProduct: FormData) => createProduct(newProduct),
   onSuccess: () => {
     // Invalidate and refetch
     console.log('Product created successfully')
   },
 })
 
+watch(
+  () => imageForm.value?.files[0],
+  (newFiles, oldFiles) => {
+    console.log('Image files changed:', { oldFiles, newFiles })
+  },
+  { deep: true },
+)
+
 const onFormSubmit = () => {
-  const { success, error } = productValidator.safeParse(formValues)
-  console.log(success)
-  console.error(error)
-  const formData = {
-    type: formValues.type,
-    name: formValues.name,
-    unit: formValues.unit,
-    reference: formValues.reference,
-    price: formValues.price,
-    tax: formValues.tax ? formValues.tax.name : null,
-    total: computedTotal.value,
-    description: formValues.description,
-    image: imageForm.value?.files[0] || null,
+  const { success } = productValidator.safeParse(formValues)
+  const formData: FormData = new FormData()
+  formData.append('type', formValues.type)
+  formData.append('name', formValues.name)
+  formData.append('unit', formValues.unit)
+  formData.append('reference', formValues.reference)
+  formData.append('price', String(formValues.price))
+  if (formValues.tax) {
+    formData.append('taxName', formValues.tax.name)
+    formData.append('taxRate', String(formValues.tax.rate))
+  }
+  formData.append('total', String(computedTotal.value))
+  formData.append('description', formValues.description)
+
+  if (imageForm.value?.files[0]) {
+    // Append the actual File object
+    formData.append('image', imageForm.value.files[0])
   }
 
   if (success) {
-    createProductMutation(formData as unknown as Product)
+    createProductMutation(formData) // backend expects multipart/form-data
   }
-  console.log('Form Data:', formData)
+
+  console.log('FormData being sent:', formData)
 }
 </script>

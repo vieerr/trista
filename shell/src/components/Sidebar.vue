@@ -21,7 +21,7 @@
         >
           <div class="p-0">
             <span :class="item.icon" />
-            <span class="ml-3 text-sm">{{ item.label }}</span>
+            <span class="ml-3 text-sm">{{ t(`${item.label}`) }}</span>
           </div>
 
           <Button
@@ -62,9 +62,11 @@ import Menu from "primevue/menu";
 import Avatar from "primevue/avatar";
 import { ref } from "vue";
 import { useRouter } from "vue-router";
+import Badge from "primevue/badge";
 import { Button } from "primevue";
-
+import { useI18n } from "vue-i18n";
 const router = useRouter();
+const { t } = useI18n();
 
 const menuItems = ref([
   {

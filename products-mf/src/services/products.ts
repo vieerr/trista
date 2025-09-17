@@ -21,7 +21,7 @@ export const getProductsCount = async (): Promise<number> => {
   }
 }
 
-export const createProduct = async (product: Product): Promise<void> => {
+export const createProduct = async (product: FormData): Promise<void> => {
   try {
     await axios.post('http://localhost:8000/products', product)
   } catch (error) {
