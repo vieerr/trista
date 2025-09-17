@@ -18,10 +18,8 @@
       </Suspense>
     </main>
   </div>
-  <Toast />
 </template>
 
 <script setup lang="ts">
 import { RouterView, RouterLink } from 'vue-router'
-import Toast from 'primevue/toast'
 </script>

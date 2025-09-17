@@ -22,7 +22,18 @@ export default defineConfig({
         './InvoicesI18n': './src/i18n.ts',
         './invoices_css': './src/invoices.styles.js',
       },
-      shared: ['vue', 'vue-router', 'primevue', 'tailwindcss', '@tanstack/vue-query'],
+      shared: [
+        'vue',
+        'vue-router',
+        {
+          primevue: {
+            requiredVersion: '^4.3.9',
+            version: '^4.3.9',
+          },
+        },
+        'tailwindcss',
+        '@tanstack/vue-query',
+      ],
     }),
     tailwindcss(),
     vueDevTools(),
@@ -34,7 +45,7 @@ export default defineConfig({
     },
   },
   build: {
-    // target: 'esnext',
+    target: 'esnext',
     // minify: false,
   },
   resolve: {

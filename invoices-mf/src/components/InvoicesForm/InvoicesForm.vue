@@ -1,8 +1,5 @@
 <template>
-  <Toast />
-  <!-- <div class="corner-div relative p-4 bg-white rounded-lg overflow-hidden shadow-md shadow-t-0">
-    <p>Content inside the div</p>
-  </div> -->
+  <Toaster richColors position="top-right" />
   <div class="corner-div relative p-4 bg-white-100 bg-white rounded-md shadow-md overflow-hidden">
     <Form
       v-slot="$form"
@@ -93,7 +90,7 @@ import InputText from 'primevue/inputtext'
 import Button from 'primevue/button'
 import Message from 'primevue/message'
 import { onMounted, reactive, ref, watch, computed, provide } from 'vue'
-// import { useToast } from 'primevue/usetoast'
+import { toast, Toaster } from 'vue-sonner'
 import { Form, type FormSubmitEvent } from '@primevue/forms'
 import { zodResolver } from '@primevue/forms/resolvers/zod'
 import { useI18n } from 'vue-i18n'
@@ -101,11 +98,9 @@ import InvoicesFormTable from '@/components/InvoicesForm/InvoicesFormTable.vue'
 import { createInvoice, getInvoicesCount } from '@/services/invoices'
 import moment from 'moment'
 import type { Invoice, ProductRow } from '@/types'
-import { Toast } from 'primevue'
 import { useMutation } from '@tanstack/vue-query'
 import { invoiceSchema } from '@/validators/InvoicesValidator'
 
-// const toast = useToast()
 const { t } = useI18n()
 
 interface FormValues {
@@ -127,7 +122,6 @@ const clients = ref([
   { name: 'Maria Garcia', id: '4' },
 ])
 
-// Define payment period options
 const paymentPeriodOptions = [
   { label: t('payment_periods.cash'), value: '0' },
   { label: t('payment_periods.7_days'), value: '7' },
@@ -164,7 +158,6 @@ onMounted(async () => {
   formValues.number = (await getInvoicesCount()) + 1 + ''
 })
 
-// Define Zod schema
 const schema = invoiceSchema
 const resolver = ref(zodResolver(schema))
 
@@ -174,7 +167,6 @@ provide('total', total)
 const { mutate: createInvoiceMutation } = useMutation({
   mutationFn: (newInvoice: Invoice) => createInvoice(newInvoice),
   onSuccess: () => {
-    // Invalidate and refetch
     console.log('Invoice created successfully')
   },
 })
@@ -183,7 +175,7 @@ const onFormSubmit = (e: FormSubmitEvent) => {
   console.log('Form submission event:', e)
 
   const productRows = tableRef.value.getProductRows() || []
-  formValues.products = productRows // Sync with form data
+  formValues.products = productRows
 
   const { success, error } = schema.safeParse(formValues)
   console.log('Validation result:', { success, error })
@@ -203,21 +195,10 @@ const onFormSubmit = (e: FormSubmitEvent) => {
   }
 
   if (success) {
-    //   console.log('Form is valid with data:', formData)
-    // toast.add({
-    //   severity: 'success',
-    //   summary: 'Form is submitted.',
-    //   life: 3000,
-    // })
+    toast.success('Factura creada con éxito')
     createInvoiceMutation(formData as unknown as Invoice)
-
-    //   // Submit formData to your API here
   } else {
-    //   toast.add({
-    //     severity: 'error',
-    //     summary: 'Please fix validation errors',
-    //     life: 3000,
-    //   })
+    toast.error('Error en el formulario, por favor verifica los datos')
   }
 }
 </script>
