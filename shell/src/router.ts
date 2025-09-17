@@ -11,14 +11,21 @@ let routes: RouteRecordRaw[] = [
 
 try {
   const Invoices = await import("invoices_mf/InvoicesRoutes");
-  console.log(Invoices);
+  const Products = await import("products_mf/ProductsRoutes");
+
+  if (Products && Products.default) {
+    const prefixedRoutes = (await Products.default).map((route: RouteRecordRaw) => ({
+      ...route,
+      path: `/products${route.path}`,
+    }));
+    routes = [...routes, ...prefixedRoutes];
+  }
   if (Invoices && Invoices.default) {
     const prefixedRoutes = (await Invoices.default).map((route: RouteRecordRaw) => ({
       ...route,
       path: `/invoices${route.path}`,
     }));
     routes = [...routes, ...prefixedRoutes];
-    console.log(routes);
   }
 } catch (error) {
   console.error(error);

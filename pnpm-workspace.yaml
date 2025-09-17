@@ -1,3 +1,4 @@
 packages:
   - "shell"
   - "invoices-mf"
+  - "products-mf"

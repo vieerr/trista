@@ -15,8 +15,11 @@ export default defineConfig(({ mode }) => {
         remotes: {
           invoices_mf: isProduction
             ? "https://trista-invoices.vercel.app/assets/remoteEntry.js"
-            : "http://localhost:4174/assets/remoteEntry.js", // Adjust port
-        },
+            : "http://localhost:4174/assets/remoteEntry.js",
+          products_mf: isProduction 
+            ? "https://trista-products.vercel.app/assets/remoteEntry.js"
+            : "http://localhost:4175/assets/remoteEntry.js",
+          },
         shared: ["vue", "@tanstack/vue-query", "vue-router"],
       }),
     ],

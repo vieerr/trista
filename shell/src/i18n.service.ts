@@ -8,6 +8,13 @@ export const setupI18n = async (options = { locale: "es" }): Promise<I18n> => {
 
   try {
     const InvoicesI18n = await import("invoices_mf/InvoicesI18n");
+    const ProductsI18n = await import("products_mf/ProductsI18n");
+    const { exposeMessages: exposeProductMessages } = ProductsI18n.default;
+    const productMessages = await exposeProductMessages(options.locale);
+    messages = {
+      ...messages,
+      ...productMessages,
+    };
     const { exposeMessages } = InvoicesI18n.default;
     const invoicesMessages = await exposeMessages(options.locale);
     messages = {

@@ -16,12 +16,18 @@
   <CheckboxGroup style="display: none" />
   <Fieldset legend="Cliente" style="display: none" />
   <Card style="display: none" />
+  <InputNumber style="display: none" />
+  <Textarea style="display: none" />
+  <FileUpload style="display: none" />
 </template>
 
 <script setup lang="ts">
 import {
   Checkbox,
   Card,
+  FileUpload,
+  Textarea,
+  InputNumber,
   CheckboxGroup,
   Button,
   DataTable,
@@ -34,5 +40,5 @@ import {
   Message,
   Divider,
 } from "primevue";
-import { Form, } from "@primevue/forms";
+import { Form } from "@primevue/forms";
 </script>

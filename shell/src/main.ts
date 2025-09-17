@@ -8,8 +8,9 @@ import PrimeVue from "primevue/config";
 import Aura from "@primeuix/themes/aura";
 try {
   await import("invoices_mf/invoices_css");
+  await import("products_mf/products_css");
 } catch (error) {
-  console.error("Error loading invoices CSS:", error);
+  console.error("Error loading microfrontends CSS:", error);
 }
 createApp(App)
   .use(PrimeVue, {

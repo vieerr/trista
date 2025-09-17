@@ -1,9 +1,10 @@
 import type { Product } from '@/types'
 import axios from 'axios'
+import { getApiBaseUrl } from '@/utils'
 
 export const fetchProducts = async (): Promise<Product[]> => {
   try {
-    const response = await axios.get('http://localhost:8000/products')
+    const response = await axios.get(`${getApiBaseUrl()}/products`)
     return response.data
   } catch (error) {
     console.error('Error fetching products:', error)
@@ -13,7 +14,7 @@ export const fetchProducts = async (): Promise<Product[]> => {
 
 export const getProductsCount = async (): Promise<number> => {
   try {
-    const response = await axios.get('http://localhost:8000/products/count')
+    const response = await axios.get(`${getApiBaseUrl()}/products/count`)
     return response.data
   } catch (error) {
     console.error('Error fetching products count:', error)
@@ -23,7 +24,7 @@ export const getProductsCount = async (): Promise<number> => {
 
 export const createProduct = async (product: FormData): Promise<void> => {
   try {
-    await axios.post('http://localhost:8000/products', product)
+    await axios.post(`${getApiBaseUrl()}/products`, product)
   } catch (error) {
     console.error('Error creating product:', error)
     throw error

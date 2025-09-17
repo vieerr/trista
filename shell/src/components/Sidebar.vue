@@ -81,5 +81,12 @@ const menuItems = ref([
     createButton: true,
     createCommand: () => router.push("/invoices/add"),
   },
+  {
+    label: "Products",
+    icon: "pi pi-box",
+    command: () => router.push("/products"),
+    createButton: true,
+    createCommand: () => router.push("/products/add"),
+  },
 ]);
 </script>
