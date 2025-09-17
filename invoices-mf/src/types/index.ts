@@ -16,7 +16,7 @@ export interface Invoice {
   type: string
   paymentMethod: string
   date: string
-  dueDate: string
+  due_date: string
   amount: number
   products: ProductRow[]
   status: InvoiceStatus

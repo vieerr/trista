@@ -12,6 +12,16 @@ export const fetchInvoices = async (): Promise<Invoice[]> => {
   }
 }
 
+export const fetchInvoiceById = async (id: string): Promise<Invoice | null> => {
+  try {
+    const response = await axios.get(`${getApiBaseUrl()}/invoices/${id}`)
+    return response.data
+  } catch (error) {
+    console.error(`Error fetching invoice with id ${id}:`, error)
+    return null
+  }
+}
+
 export const getInvoicesCount = async (): Promise<number> => {
   try {
     const response = await axios.get(`${getApiBaseUrl()}/invoices/count`)
