@@ -188,7 +188,7 @@ const schema = z.object({
   products: z
     .array(
       z.object({
-        productId: z.string(),
+        _id: z.string(),
       }),
     )
     .min(1, { message: 'Al menos un producto es requerido' }),

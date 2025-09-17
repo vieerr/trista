@@ -141,7 +141,6 @@ const taxes = ref([
 
 const rows: Reactive<ProductRow[]> = reactive([
   {
-    id: Date.now().toString(),
     name: '',
     product: null,
     quantity: 1,
@@ -171,7 +170,6 @@ const onProductChange = (row: ProductRow, selectedProduct: Product) => {
 
 const addRow = () => {
   rows.push({
-    id: Date.now().toString(),
     quantity: 1,
     product: null,
     price: 0,
@@ -182,7 +180,7 @@ const addRow = () => {
 }
 
 const deleteRow = (id: string) => {
-  const index = rows.findIndex((row) => row.id === id)
+  const index = rows.findIndex((row) => row._id === id)
   if (index !== -1) {
     rows.splice(index, 1)
   }
@@ -196,8 +194,8 @@ const calculateRowTotal = (row: ProductRow) => {
 
 const getProductRows = () => {
   const mappedRows = rows.map((row) => ({
-    id: row.id,
-    productId: row.product?.id,
+    // _id: row._id,
+    _id: row.product?._id,
     productName: row.product?.name,
     reference: row.reference,
     price: row.price,
