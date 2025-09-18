@@ -19,8 +19,10 @@
         sortable
       >
         <template #body="slotProps">
-          <span v-if="col.type === 'currency'"> ${{ slotProps.data[col.field] }} </span>
-          <span v-else-if="col.type === 'percentage'"> {{ slotProps.data[col.field] }}% </span>
+          <span v-if="col.type === 'currency'"> ${{ slotProps.data[col.field].toFixed(2) }} </span>
+          <span v-else-if="col.type === 'percentage'">
+            {{ slotProps.data[col.field].toFixed(2) }}%
+          </span>
           <span v-else-if="col.translate">
             {{ t(`invoices.${slotProps.data[col.field]}`) }}
           </span>

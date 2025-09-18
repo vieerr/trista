@@ -41,6 +41,7 @@ export const i18n = createI18n({
       payment_period: 'Plazo de Pago',
       payment_periods: {
         cash: 'Contado',
+        immediate: 'De contado',
         '7_days': '7 Días',
         '15_days': '15 Días',
         '1_month': '1 Mes',
@@ -65,6 +66,7 @@ export const i18n = createI18n({
         description: 'Gestiona todas tus facturas en un solo lugar.',
       },
       invoices_detail: {
+        title: 'Detalle de la Factura',
         client: 'Cliente',
         address: 'Dirección',
         date: 'Fecha',
@@ -81,11 +83,11 @@ export const i18n = createI18n({
         total: 'Total',
         payment_method: 'Método de Pago',
         payment_period: 'Plazo de Pago',
-        // clientId: 'NIF/CIF',
-        // dueDate: 'Fecha de Vencimiento',
-        // status: 'Estado',
-        // invoiceDetails: 'Detalles de la Factura',
-        // productService: 'Producto/Servicio',
+        print: 'Imprimir',
+        downloadPDF: 'Descargar PDF',
+        subtotal: 'Subtotal',
+        taxable_base: 'Base Imponible',
+
       },
     },
   },
