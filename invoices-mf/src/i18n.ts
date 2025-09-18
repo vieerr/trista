@@ -6,6 +6,7 @@ export const i18n = createI18n({
   fallbackLocale: 'es',
   messages: {
     es: {
+      back: 'Atrás',
       save: 'Guardar',
       select: 'Seleccionar',
       invoices: {
@@ -61,7 +62,7 @@ export const i18n = createI18n({
         add_row: 'Añadir Fila',
         due_date: 'Fecha de Vencimiento',
         save: 'Guardar Factura',
-        create_again: "Guardar y Crear Nueva",
+        create_again: 'Guardar y Crear Nueva',
         cancel: 'Cancelar',
       },
       invoices_table: {
@@ -90,7 +91,6 @@ export const i18n = createI18n({
         downloadPDF: 'Descargar PDF',
         subtotal: 'Subtotal',
         taxable_base: 'Base Imponible',
-
       },
     },
   },

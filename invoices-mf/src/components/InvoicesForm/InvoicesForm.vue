@@ -191,14 +191,23 @@ const { mutate: createInvoiceMutation } = useMutation({
     toast.success('Factura creada con éxito')
     queryClient.invalidateQueries({ queryKey: ['invoices'] })
     queryClient.invalidateQueries({ queryKey: ['invoice-count'] })
+    if (redirectAfterCreate.value) {
+      goToInvoice(formValues.number)
+    }
   },
   onError: () => {
     toast.error('Error al crear la factura')
   },
 })
 
+const redirectAfterCreate = ref(false)
+
 const goToTable = () => {
   router.push(router.getRoutes().find((route) => route.name === 'InvoicesTable')!.path)
+}
+
+const goToInvoice = (id: string) => {
+  router.push(`/view/${id}`)
 }
 
 const handleCreateAgain = () => {
@@ -217,9 +226,10 @@ const handleCreateAgain = () => {
 }
 
 const onFormSubmit = ({ redirect = true }: { redirect?: boolean }) => {
+  redirectAfterCreate.value = redirect
+
   const productRows = tableRef.value.getProductRows() || []
   formValues.products = productRows
-
   const totals = tableRef.value.totals || {}
 
   const formData = {
@@ -247,11 +257,7 @@ const onFormSubmit = ({ redirect = true }: { redirect?: boolean }) => {
   const { success, error } = schema.safeParse(formData)
   if (success) {
     createInvoiceMutation(formData as unknown as Invoice)
-    if (redirect) {
-      goToTable()
-    }
   } else {
-    console.error('Validation errors:', error)
     toast.error(
       'Error en la validación del formulario:\n' +
         (error as ZodError).issues.map((err) => err.message).join('\n'),

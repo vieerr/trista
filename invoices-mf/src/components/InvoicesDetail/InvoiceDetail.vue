@@ -2,7 +2,17 @@
   <div class="pb-10">
     <Card class="mb-5" shadow="shadow-2">
       <template #title>
-        <h2 class="text-xl flex items-center">
+        <Button
+          icon="pi pi-arrow-left"
+          class="mr-3"
+          :label="t('back')"
+          severity="secondary"
+          variant="text"
+          rounded
+          text
+          @click="router.back()"
+        />
+        <h2 class="text-xl flex items-center mt-5">
           <span> {{ t('invoices_detail.title') }} </span>
           <Badge :value="props.id" size="xlarge" class="ml-4" severity="contrast" />
         </h2>
@@ -210,11 +220,12 @@ import { fetchInvoiceById } from '@/services/invoices'
 import { useQuery } from '@tanstack/vue-query'
 import { formatCurrency } from '@/utils'
 import { ref } from 'vue'
-
+import { useRouter } from 'vue-router'
 const props = defineProps({
   id: String,
 })
 
+const router = useRouter()
 const { t } = useI18n()
 const invoiceContent = ref<HTMLElement | null>(null)
 

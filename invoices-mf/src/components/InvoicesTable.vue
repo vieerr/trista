@@ -7,8 +7,12 @@
       size="large"
       paginator
       :rows="10"
+      @row-click="onRowClick"
+      :rowClass="() => 'group cursor-pointer'"
       :value="invoices"
       tableStyle="min-width: 50rem"
+      :sortField="'number'"
+      :sortOrder="-1"
     >
       <Column selectionMode="multiple" headerStyle="width: 3rem" />
       <Column
@@ -17,6 +21,7 @@
         :field="col.field"
         :header="col.header"
         sortable
+        :bodyClass="'group-hover:bg-gray-100 transition-colors'"
       >
         <template #body="slotProps">
           <span v-if="col.type === 'currency'"> ${{ slotProps.data[col.field].toFixed(2) }} </span>
@@ -43,8 +48,10 @@ import { fetchInvoices } from '@/services/invoices'
 import type { Invoice } from '@/types'
 import { useQuery } from '@tanstack/vue-query'
 import { useI18n } from 'vue-i18n'
+import { useRouter } from 'vue-router'
 
 const { t } = useI18n()
+const router = useRouter()
 
 const selectedProducts = ref<Invoice[]>([])
 
@@ -66,4 +73,8 @@ const columns = ref([
   { field: 'total', header: t('invoices.Total'), translate: false, type: 'currency' },
   { field: 'status', header: t('invoices.Status'), translate: true }, // Mark this for translation
 ])
+
+const onRowClick = (event: { data: Invoice }) => {
+  router.push(`/view/${event.data.number}`)
+}
 </script>
