@@ -214,5 +214,8 @@ const getProductRows = () => {
   return mappedRows
 }
 
-defineExpose({ getProductRows, totals: priceDetailRef })
+const resetTable = () => {
+  rows.splice(0, rows.length, createRow())
+}
+defineExpose({ getProductRows, resetTable, totals: priceDetailRef })
 </script>

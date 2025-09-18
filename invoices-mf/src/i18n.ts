@@ -60,6 +60,9 @@ export const i18n = createI18n({
         total: 'Total',
         add_row: 'Añadir Fila',
         due_date: 'Fecha de Vencimiento',
+        save: 'Guardar Factura',
+        create_again: "Guardar y Crear Nueva",
+        cancel: 'Cancelar',
       },
       invoices_table: {
         title: 'Facturas',
