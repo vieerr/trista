@@ -26,5 +26,4 @@ createApp(App)
   .use(router)
   .use(i18n)
   .use(VueQueryPlugin)
-  // .use(ToastService)
   .mount("#app");

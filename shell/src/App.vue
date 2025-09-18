@@ -2,14 +2,9 @@
   <div class="flex h-screen">
     <Sidebar />
     <main class="flex-1 p-6 overflow-auto bg-gray-50">
-      <Suspense>
-        <template #default>
-          <RouterView />
-        </template>
-        <template #fallback>
-          <div>Loading...</div>
-        </template>
-      </Suspense>
+      <div>
+        <RouterView />
+      </div>
     </main>
   </div>
   <TreeShakeSurvivors />
@@ -18,7 +13,7 @@
 
 <script setup lang="ts">
 import Sidebar from "./components/Sidebar.vue";
-import { VueQueryDevtools } from '@tanstack/vue-query-devtools'
+import { VueQueryDevtools } from "@tanstack/vue-query-devtools";
 import { RouterView } from "vue-router";
 import "./style.css";
 import TreeShakeSurvivors from "./components/TreeShakeSurvivors.vue";
