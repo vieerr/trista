@@ -5,7 +5,6 @@
       v-slot="$form"
       :initialValues="formValues"
       :resolver="resolver"
-      @submit="onFormSubmit"
       class="w-full p-5 mx-auto bg-white"
     >
       <h2 class="text-lg font-mono font-thin text-center text-gray-700 py-10">
@@ -92,7 +91,11 @@
           :label="t('invoices_form.create_again')"
           @click="() => handleCreateAgain()"
         />
-        <Button type="submit" icon="pi pi-save" :label="t('invoices_form.save')" />
+        <Button
+          @click="onFormSubmit({ redirect: true })"
+          icon="pi pi-save"
+          :label="t('invoices_form.save')"
+        />
       </div>
     </Form>
   </div>
@@ -118,7 +121,7 @@ import type { Invoice, ProductRow } from '@/types'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query'
 import { invoiceSchema } from '@/validators/InvoicesValidator'
 import { useRouter } from 'vue-router'
-import type { ZodError } from 'zod'
+import { type ZodError } from 'zod'
 import type { InvoicesFormData } from '@/types'
 
 const router = useRouter()
@@ -199,7 +202,7 @@ const goToTable = () => {
 }
 
 const handleCreateAgain = () => {
-  onFormSubmit()
+  onFormSubmit({ redirect: false })
   formValues.client = null
   formValues.date = new Date()
   formValues.payment_method = {
@@ -213,7 +216,7 @@ const handleCreateAgain = () => {
   formValues.number = (invoiceCount?.value ?? 0) + 1 + ''
 }
 
-const onFormSubmit = () => {
+const onFormSubmit = ({ redirect = true }: { redirect?: boolean }) => {
   const productRows = tableRef.value.getProductRows() || []
   formValues.products = productRows
 
@@ -244,6 +247,9 @@ const onFormSubmit = () => {
   const { success, error } = schema.safeParse(formData)
   if (success) {
     createInvoiceMutation(formData as unknown as Invoice)
+    if (redirect) {
+      goToTable()
+    }
   } else {
     console.error('Validation errors:', error)
     toast.error(
