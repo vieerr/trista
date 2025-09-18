@@ -1,24 +1,33 @@
 <template>
   <div>
     <div class="card">
-      <DataTable v-model:selection="selectedProducts" class="text-xs" size="small" :value="rows">
+      <DataTable
+        v-model:selection="selectedProducts"
+        class="text-xs"
+        size="small"
+        :value="rows"
+        dataKey="row_id"
+        responsiveLayout="scroll"
+      >
         <Column selectionMode="multiple" headerStyle="width: 3rem"></Column>
         <Column
           field="product-service"
           headerStyle="width: 17rem"
           :header="t('invoices_form.product_service')"
+          :key="`product-service-${Date.now()}`"
         >
           <template #body="slotProps">
             <FloatLabel variant="on" class="my-3">
               <Select
                 size="small"
-                name="product-service"
+                :name="`product-select-${slotProps.data.row_id}`"
                 variant="filled"
                 editable
                 :options="productOptions"
                 optionLabel="name"
                 v-model="slotProps.data.product"
                 @change="onProductChange(slotProps.data, $event.value)"
+                :key="`product-select-${slotProps.data.row_id}`"
                 fluid
               />
             </FloatLabel>
@@ -28,7 +37,7 @@
           <template #body="slotProps">
             <InputText
               size="small"
-              :id="`reference-${slotProps.data.id}`"
+              :id="`reference-${slotProps.data.row_id}`"
               v-model="slotProps.data.reference"
               type="text"
               fluid
@@ -39,7 +48,7 @@
           <template #body="slotProps">
             <InputText
               size="small"
-              :id="`price-${slotProps.data.id}`"
+              :id="`price-${slotProps.data.row_id}`"
               v-model.number="slotProps.data.price"
               type="number"
               fluid
@@ -50,7 +59,7 @@
           <template #body="slotProps">
             <InputText
               size="small"
-              :id="`discount-${slotProps.data.id}`"
+              :id="`discount-${slotProps.data.row_id}`"
               v-model.number="slotProps.data.discount"
               type="number"
               min="0"
@@ -76,7 +85,7 @@
         <Column field="quantity" :header="t('invoices_form.quantity')">
           <template #body="slotProps">
             <InputText
-              :id="`quantity-${slotProps.data.id}`"
+              :id="`quantity-${slotProps.data.row_id}`"
               v-model.number="slotProps.data.quantity"
               size="small"
               type="number"
@@ -93,7 +102,7 @@
         </Column>
         <Column headerStyle="width: 5rem">
           <template #body="slotProps">
-            <Button @click="deleteRow(slotProps.data.id)"> <i class="pi pi-times"></i> </Button>
+            <Button @click="deleteRow(slotProps.data.row_id)"> <i class="pi pi-times"></i> </Button>
           </template>
         </Column>
       </DataTable>
@@ -127,7 +136,6 @@ import InvoicePriceDetail from './InvoicePriceDetail.vue'
 const { t } = useI18n()
 
 const { data: products } = useQuery({ queryKey: ['products'], queryFn: fetchProducts })
-
 const productOptions = computed(() => products.value ?? [])
 
 const selectedProducts = ref([])
@@ -139,22 +147,32 @@ const taxes = ref([
   { id: 3, name: 'No Tax', rate: 0 },
 ])
 
-const rows: Reactive<ProductRow[]> = reactive([
-  {
-    name: '',
-    product: null,
-    quantity: 1,
-    price: 0,
-    discount: 0,
-    tax: taxes.value[2], // Default to "No Tax"
-    reference: '',
-  },
-])
+const createRow = (): ProductRow => ({
+  row_id: Date.now().toString(),
+  product: null,
+  quantity: 1,
+  price: 0,
+  discount: 0,
+  tax: taxes.value[2],
+  reference: '',
+})
 
+const rows: Reactive<ProductRow[]> = reactive([createRow()])
+watch(
+  rows,
+  (newRows) => {
+    console.log('Rows changed:', newRows)
+  },
+  { deep: true },
+)
+const addRow = () => {
+  rows.push(createRow())
+}
 const onProductChange = (row: ProductRow, selectedProduct: Product) => {
   if (selectedProduct) {
+    const productCopy = { ...selectedProduct }
+    row.product = productCopy
     row.price = selectedProduct.price || 0
-
     if (selectedProduct.taxRate !== undefined) {
       const matchingTax = taxes.value.find((tax) => tax.rate === selectedProduct.taxRate)
       if (matchingTax) {
@@ -168,19 +186,8 @@ const onProductChange = (row: ProductRow, selectedProduct: Product) => {
   }
 }
 
-const addRow = () => {
-  rows.push({
-    quantity: 1,
-    product: null,
-    price: 0,
-    discount: 0,
-    tax: taxes.value[2], // Default to "No Tax"
-    reference: '',
-  })
-}
-
-const deleteRow = (id: string) => {
-  const index = rows.findIndex((row) => row._id === id)
+const deleteRow = (row_id: string) => {
+  const index = rows.findIndex((row) => row.row_id === row_id) // 👈 fixed
   if (index !== -1) {
     rows.splice(index, 1)
   }
@@ -194,8 +201,7 @@ const calculateRowTotal = (row: ProductRow) => {
 
 const getProductRows = () => {
   const mappedRows = rows.map((row) => ({
-    // _id: row._id,
-    _id: row.product?._id,
+    row_id: row.row_id,
     productName: row.product?.name,
     reference: row.reference,
     price: row.price,
@@ -208,9 +214,5 @@ const getProductRows = () => {
   return mappedRows
 }
 
-watch(priceDetailRef.value?.total, (newVal) => {
-  console.log('priceDetailRef changed:', newVal)
-})
-
-defineExpose({ getProductRows, total: priceDetailRef.value?.total })
+defineExpose({ getProductRows, totals: priceDetailRef })
 </script>

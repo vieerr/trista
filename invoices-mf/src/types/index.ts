@@ -1,7 +1,8 @@
 type InvoiceStatus = 'Paid' | 'Pending' | 'Overdue'
 
 export interface ProductRow {
-  _id?: string
+  row_id: string
+  // _id?: string
   product: Product | null
   reference?: string
   price: number
@@ -11,15 +12,24 @@ export interface ProductRow {
   total?: number
 }
 export interface Invoice {
-  number: string
-  client: string
-  type: string
-  paymentMethod: string
-  date: string
-  due_date: string
-  amount: number
-  products: ProductRow[]
-  status: InvoiceStatus
+  number: string;
+  client_id: string;
+  client_name: string;
+  client_official_id: string;
+  client_phone: string;
+  operation_date: string;
+  type: string;
+  payment_method: string;
+  payment_period: string;
+  due_date: string;
+  products: ProductRow[];
+  subtotal: number;
+  discount: number;
+  taxable_base: number;
+  taxes: Record<string, number>;
+  total: number;
+  created_at: string;
+  status: InvoiceStatus;
 }
 
 export interface Product {

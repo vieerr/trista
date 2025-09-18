@@ -31,7 +31,7 @@
 <script setup lang="ts">
 import Divider from 'primevue/divider'
 import type { ProductRow } from '@/types'
-import { computed, defineProps, inject, watch } from 'vue'
+import { computed, defineProps } from 'vue'
 import type { Reactive } from 'vue'
 
 const props = defineProps<{
@@ -83,17 +83,12 @@ const calculateTotal = (rows: Reactive<ProductRow[]>): number => {
   return taxableBase + totalTax
 }
 
-const totalValue = inject<{ value: number }>('total')
-const total = computed(() => calculateTotal(props.rows))
-
-watch(
-  total,
-  (newTotal) => {
-    if (totalValue) {
-      totalValue.value = newTotal
-    }
-  },
-  { immediate: true },
-)
-defineExpose({ calculateTotal })
+defineExpose({
+  calculateTotal,
+  subtotal: computed(() => calculateSubtotal(props.rows)),
+  discount: computed(() => calculateDiscount(props.rows)),
+  taxable_base: computed(() => calculateTaxableBase(props.rows)),
+  taxes: computed(() => getTaxAmounts(props.rows)),
+  total: computed(() => calculateTotal(props.rows)),
+})
 </script>

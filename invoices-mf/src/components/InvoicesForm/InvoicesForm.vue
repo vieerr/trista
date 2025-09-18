@@ -89,8 +89,8 @@ import DatePicker from 'primevue/datepicker'
 import InputText from 'primevue/inputtext'
 import Button from 'primevue/button'
 import Message from 'primevue/message'
-import { onMounted, reactive, ref, watch, computed, provide } from 'vue'
-import { toast, Toaster } from 'vue-sonner'
+import { onMounted, reactive, ref, watch, computed } from 'vue'
+import { Toaster, toast } from 'vue-sonner'
 import { Form, type FormSubmitEvent } from '@primevue/forms'
 import { zodResolver } from '@primevue/forms/resolvers/zod'
 import { useI18n } from 'vue-i18n'
@@ -161,13 +161,13 @@ onMounted(async () => {
 const schema = invoiceSchema
 const resolver = ref(zodResolver(schema))
 
-const total = ref(0)
-provide('total', total)
-
 const { mutate: createInvoiceMutation } = useMutation({
   mutationFn: (newInvoice: Invoice) => createInvoice(newInvoice),
   onSuccess: () => {
-    console.log('Invoice created successfully')
+    toast.success('Factura creada con éxito')
+  },
+  onError: () => {
+    toast.error('Error al crear la factura')
   },
 })
 
@@ -177,43 +177,34 @@ const onFormSubmit = (e: FormSubmitEvent) => {
   const productRows = tableRef.value.getProductRows() || []
   formValues.products = productRows
 
-  const { success, error } = schema.safeParse(formValues)
-  console.log('Validation result:', { success, error })
+  const totals = tableRef.value.totals || {}
 
   const formData = {
     number: formValues.number,
-    clientId: formValues.client?.id,
-    client: formValues.client?.name,
-    date: moment(formValues.date).format('DD-MM-YYYY'),
+    client_id: formValues.client?.id,
+    client_name: formValues.client?.name,
+    client_official_id: '123456789',
+    client_phone: '0992468823',
+    operation_date: moment(formValues.date).format('DD-MM-YYYY'),
     type: 'Simple',
     payment_method: formValues['payment_method'].value,
     payment_period: formValues['payment_period'].value,
     due_date: moment(formValues['due_date']).format('DD-MM-YYYY'),
     products: formValues.products,
-    amount: total.value,
+    amount: totals.amount,
+    subtotal: totals.subtotal,
+    discount: totals.discount,
+    taxable_base: totals.taxable_base,
+    taxes: totals.taxes,
+    total: totals.total,
+    created_at: moment().format('DD-MM-YYYY HH:mm:ss'),
     status: 'Pending',
   }
 
+  const { success } = schema.safeParse(formData)
+
   if (success) {
-    toast.success('Factura creada con éxito')
     createInvoiceMutation(formData as unknown as Invoice)
-  } else {
-    toast.error('Error en el formulario, por favor verifica los datos')
   }
 }
 </script>
-<style scoped>
-.corner-div::after {
-  content: '';
-  border-width: 0 40px 42px 0;
-  border-color: #000000 #fff #dadada #ffffff;
-  border-bottom-left-radius: 0.375rem;
-  background-color: white;
-  width: 0;
-  display: block;
-  position: absolute;
-  top: 0;
-  right: 0;
-  box-shadow: -3px 3px 5px #f1f5f9;
-}
-</style>
