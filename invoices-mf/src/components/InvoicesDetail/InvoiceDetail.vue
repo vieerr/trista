@@ -52,13 +52,15 @@
             <p>
               <span class="text-gray-500 font-light"> {{ t('invoices_detail.client') }}: </span>
               <span class="text-gray-500 font-medium">
-                {{ invoice?.client }}
+                {{ invoice?.client_name }}
               </span>
             </p>
             <p>
               <span class="text-gray-600 font-light"> {{ t('invoices_detail.date') }}: </span>
               <span class="text-gray-500 font-medium">
-                {{ moment(invoice?.date, 'DD-MM-YYYY').locale('es').format('DD/MM/YYYY') }}
+                {{
+                  moment(invoice?.operation_date, 'DD-MM-YYYY').locale('es').format('DD/MM/YYYY')
+                }}
               </span>
             </p>
           </div>
@@ -67,8 +69,8 @@
             <p>
               <span class="text-gray-500 font-light"> {{ t('invoices_detail.clientId') }}: </span>
               <span class="text-gray-500 font-medium">
-                9999999999999
-                <!-- {{ invoice?.clientId }} -->
+                <!-- 9999999999999 -->
+                {{ invoice?.client_id }}
               </span>
             </p>
             <p>
@@ -85,8 +87,7 @@
                 {{ t('invoices_detail.clientPhone') }}:
               </span>
               <span class="text-gray-500 font-medium">
-                0991234567
-                <!-- {{ invoice?.clientPhone }} -->
+                {{ invoice?.client_phone }}
               </span>
             </p>
           </div>
@@ -150,7 +151,7 @@
               </p>
               <p>
                 <span class="text-gray-500 font-medium">
-                  {{ invoice?.paymentMethod }}
+                  {{ invoice?.payment_method }}
                 </span>
               </p>
             </div>
@@ -165,8 +166,7 @@
               </p>
               <p>
                 <span class="text-gray-500 font-medium">
-                  <!-- {{ invoice?.paymentPeriod }} -->
-                  De contado
+                  {{ invoice?.payment_period }}
                 </span>
               </p>
             </div>
