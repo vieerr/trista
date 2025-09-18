@@ -11,12 +11,14 @@
         <div class="flex gap-2 mt-4">
           <Button
             variant="outlined"
+            @click="printInvoice"
             size="small"
             icon="pi pi-print"
             :label="t('invoices_detail.print')"
           />
           <Button
             variant="outlined"
+            @click="printInvoice"
             size="small"
             icon="pi pi-file-pdf"
             :label="t('invoices_detail.downloadPDF')"
@@ -42,7 +44,10 @@
     </Card>
     <!-- TODO: implement payment details and history -->
 
-    <div class="corner-div relative p-4 bg-white-100 bg-white rounded-md shadow-md overflow-hidden">
+    <div
+      class="corner-div relative p-4 bg-white-100 bg-white rounded-md shadow-md overflow-hidden"
+      ref="invoiceContent"
+    >
       <div class="w-full p-5 mx-auto bg-white">
         <h2 class="text-lg font-mono font-thin text-center text-gray-700 py-10">
           Super Awesome Company
@@ -204,12 +209,14 @@ import type { Invoice } from '@/types'
 import { fetchInvoiceById } from '@/services/invoices'
 import { useQuery } from '@tanstack/vue-query'
 import { formatCurrency } from '@/utils'
-
-const { t } = useI18n()
+import { ref } from 'vue'
 
 const props = defineProps({
   id: String,
 })
+
+const { t } = useI18n()
+const invoiceContent = ref<HTMLElement | null>(null)
 
 const { data: invoice } = useQuery<Invoice | null>({
   queryKey: ['invoice', props.id],
@@ -229,4 +236,16 @@ const columns = [
   { field: 'quantity', header: t('invoices_detail.quantity') },
   { field: 'total', header: t('invoices_detail.total'), type: 'currency' },
 ]
+
+const printInvoice = () => {
+  if (!invoiceContent.value) return
+
+  const originalContents = document.body.innerHTML
+  const printContents = invoiceContent.value.innerHTML
+
+  document.body.innerHTML = printContents
+  window.print()
+  document.body.innerHTML = originalContents
+  window.location.reload()
+}
 </script>
