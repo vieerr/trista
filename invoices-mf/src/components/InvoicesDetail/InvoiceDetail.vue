@@ -14,7 +14,7 @@
         />
         <h2 class="text-xl flex items-center mt-5">
           <span> {{ t('invoices_detail.title') }} </span>
-          <Badge :value="props.id" size="xlarge" class="ml-4" severity="contrast" />
+          <Badge :value="props.id" size="xlarge" class="ml-4" severity="success" />
         </h2>
       </template>
       <template #content>

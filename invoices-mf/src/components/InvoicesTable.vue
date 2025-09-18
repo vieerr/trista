@@ -75,6 +75,11 @@ const columns = ref([
 ])
 
 const onRowClick = (event: { data: Invoice }) => {
-  router.push(`/view/${event.data.number}`)
+  router.push(
+    router
+      .getRoutes()
+      .find((route) => route.name === 'ViewInvoice')!
+      .path.replace(':id', event.data.number),
+  )
 }
 </script>

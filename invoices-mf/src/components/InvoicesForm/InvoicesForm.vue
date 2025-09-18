@@ -207,7 +207,12 @@ const goToTable = () => {
 }
 
 const goToInvoice = (id: string) => {
-  router.push(`/view/${id}`)
+  router.push(
+    router
+      .getRoutes()
+      .find((route) => route.name === 'ViewInvoice')!
+      .path.replace(':id', id),
+  )
 }
 
 const handleCreateAgain = () => {
