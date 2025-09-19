@@ -12,7 +12,7 @@
         <Column selectionMode="multiple" headerStyle="width: 3rem"></Column>
         <Column
           field="product-service"
-          headerStyle="width: 17rem"
+          headerStyle="width: 13rem"
           :header="t('invoices_form.product_service')"
           :key="`product-service-${Date.now()}`"
         >
@@ -46,34 +46,38 @@
         </Column>
         <Column field="price" :header="t('invoices_form.price')">
           <template #body="slotProps">
-            <InputText
+            <InputNumber
               size="small"
               :id="`price-${slotProps.data.row_id}`"
               v-model.number="slotProps.data.price"
-              type="number"
+              :min="0"
+              mode="currency"
+              currency="USD"
+              locale="en-US"
               fluid
             />
           </template>
         </Column>
-        <Column field="discount" :header="t('invoices_form.discount')">
+        <Column field="discount" :header="t('invoices_form.discount')" headerStyle="width: 1rem">
           <template #body="slotProps">
-            <InputText
+            <InputNumber
               size="small"
               :id="`discount-${slotProps.data.row_id}`"
               v-model.number="slotProps.data.discount"
-              type="number"
-              min="0"
-              max="100"
-              step="0.1"
+              :min="0"
+              :max="100"
+              :step="0.1"
+              mode="decimal"
+              suffix="%"
               fluid
             />
           </template>
         </Column>
-        <Column field="tax" :header="t('invoices_form.tax')">
+        <Column field="tax" :header="t('invoices_form.tax')" headerStyle="width: 9rem">
           <template #body="slotProps">
             <Select
               size="small"
-              name="tax"
+              :name="`tax-select-${slotProps.data.row_id}`"
               variant="filled"
               :options="taxes"
               optionLabel="name"
@@ -82,15 +86,14 @@
             />
           </template>
         </Column>
-        <Column field="quantity" :header="t('invoices_form.quantity')">
+        <Column field="quantity" :header="t('invoices_form.quantity')" headerStyle="width: 1rem">
           <template #body="slotProps">
-            <InputText
+            <InputNumber
               :id="`quantity-${slotProps.data.row_id}`"
               v-model.number="slotProps.data.quantity"
               size="small"
-              type="number"
-              min="0"
-              step="1"
+              mode="decimal"
+              :min="1"
               fluid
             />
           </template>
@@ -132,6 +135,7 @@ import { useQuery } from '@tanstack/vue-query'
 import { fetchProducts } from '@/services/products'
 import type { ProductRow, Product } from '@/types'
 import InvoicePriceDetail from './InvoicePriceDetail.vue'
+import { InputNumber } from 'primevue'
 
 const { t } = useI18n()
 
@@ -142,9 +146,8 @@ const selectedProducts = ref([])
 const priceDetailRef = ref()
 
 const taxes = ref([
-  { id: 1, name: 'IVA 20%', rate: 20 },
-  { id: 2, name: 'IVA 10%', rate: 10 },
-  { id: 3, name: 'No Tax', rate: 0 },
+  { name: 'IVA General 12%', rate: 12 },
+  { name: 'IVA Tarifa 0', rate: 0 },
 ])
 
 const createRow = (): ProductRow => ({
@@ -153,7 +156,7 @@ const createRow = (): ProductRow => ({
   quantity: 1,
   price: 0,
   discount: 0,
-  tax: taxes.value[2],
+  tax: taxes.value[1],
   reference: '',
 })
 
@@ -173,16 +176,13 @@ const onProductChange = (row: ProductRow, selectedProduct: Product) => {
     const productCopy = { ...selectedProduct }
     row.product = productCopy
     row.price = selectedProduct.price || 0
-    if (selectedProduct.taxRate !== undefined) {
-      const matchingTax = taxes.value.find((tax) => tax.rate === selectedProduct.taxRate)
-      if (matchingTax) {
-        row.tax = matchingTax
-      }
+    row.tax = {
+      rate: selectedProduct.taxRate || 0,
+      name: selectedProduct.taxName || '',
     }
 
-    if (selectedProduct.reference) {
-      row.reference = selectedProduct.reference
-    }
+    row.reference = selectedProduct.reference
+    console.log(row)
   }
 }
 

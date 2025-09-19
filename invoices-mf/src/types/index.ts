@@ -7,7 +7,7 @@ export interface ProductRow {
   reference?: string
   price: number
   discount: number
-  tax: { id: number; name: string; rate: number }
+  tax: { name: string; rate: number }
   quantity: number
   total?: number
 }
@@ -34,10 +34,15 @@ export interface Invoice {
 
 export interface Product {
   _id: string
-  name: string
+  type: string
+  unit: string
   reference?: string
+  name: string
   price: number
+  total?: number
+  image_url?: string
   taxRate?: number
+  taxName?: string
 }
 
 export interface InvoicesFormData {
