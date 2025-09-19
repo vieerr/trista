@@ -1,4 +1,4 @@
-import type { Product } from '@/types'
+import type { Invoice, Product } from '@/types'
 import axios from 'axios'
 import { getApiBaseUrl } from '@/utils'
 
@@ -38,5 +38,15 @@ export const getProductById = async (id: string): Promise<Product | null> => {
   } catch (error) {
     console.error(`Error fetching product with id ${id}:`, error)
     return null
+  }
+}
+
+export const getInvoicesByProductId = async (id: string): Promise<Invoice[]> => {
+  try {
+    const response = await axios.get(`${getApiBaseUrl()}/invoices/product/${id}`)
+    return response.data
+  } catch (error) {
+    console.error(`Error fetching invoices for product with id ${id}:`, error)
+    return []
   }
 }

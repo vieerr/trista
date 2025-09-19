@@ -91,7 +91,7 @@
     <template #content>
       <DataTable
         :value="invoices"
-        dataKey="folio"
+        dataKey="_id"
         class="text-sm"
         selectionMode="checkbox"
         v-model:selection="selectedInvoices"
@@ -104,51 +104,58 @@
         <!-- Checkbox column -->
         <Column selectionMode="multiple" headerStyle="width:3rem"></Column>
 
-        <!-- Folio -->
-        <Column field="folio" header="Folio" sortable>
+        <!-- Invoice Number -->
+        <Column field="number" header="Número de Factura" sortable>
           <template #body="{ data }">
             <a href="#" class="text-teal-600 hover:underline">
-              {{ data.folio }}
+              {{ data.number }}
             </a>
           </template>
         </Column>
 
-        <!-- Cliente -->
-        <Column field="cliente" header="Cliente" sortable>
+        <!-- Client Name -->
+        <Column field="client_name" header="Cliente" sortable>
           <template #body="{ data }">
             <a href="#" class="text-teal-600 hover:underline">
-              {{ data.cliente }}
+              {{ data.client_name }}
             </a>
           </template>
         </Column>
 
-        <!-- Creación -->
-        <Column field="creacion" header="Creación" sortable></Column>
+        <!-- Operation Date -->
+        <Column field="operation_date" header="Fecha de Operación" sortable></Column>
 
-        <!-- Vencimiento -->
-        <Column field="vencimiento" header="Vencimiento" sortable>
+        <!-- Due Date -->
+        <Column field="due_date" header="Fecha de Vencimiento" sortable>
           <template #body="{ data }">
-            <span :class="data.vencimientoColor">
-              {{ data.vencimiento }}
+            <span :class="data.status === 'Vencido' ? 'text-red-500' : 'text-green-500'">
+              {{ data.due_date }}
             </span>
           </template>
         </Column>
 
         <!-- Total -->
-        <Column field="total" header="Total" sortable></Column>
+        <Column field="total" header="Total" sortable>
+          <template #body="{ data }">
+            {{ formatCurrency(data.total) }}
+          </template>
+        </Column>
 
-        <!-- Pagado -->
-        <Column field="pagado" header="Pagado" sortable></Column>
-
-        <!-- Estado -->
-        <Column field="estado" header="Estado" sortable></Column>
+        <!-- Status -->
+        <Column field="status" header="Estado" sortable>
+          <template #body="{ data }">
+            <span :class="data.status === 'Pagado' ? 'text-green-500' : 'text-yellow-500'">
+              {{ data.status }}
+            </span>
+          </template>
+        </Column>
       </DataTable>
     </template>
   </Card>
 </template>
 
 <script lang="ts" setup>
-import { getProductById } from '@/services/products'
+import { getInvoicesByProductId, getProductById } from '@/services/products'
 import { useQuery } from '@tanstack/vue-query'
 import { Button, Card, DataTable, Column, Image } from 'primevue'
 import { formatCurrency } from '@/utils'
@@ -157,34 +164,17 @@ const props = defineProps({
   id: String,
 })
 
-// will be replaced with real data later
-const invoices = [
-  {
-    folio: 'F001-0001',
-    cliente: 'Cliente A',
-    creacion: '2023-01-01',
-    vencimiento: '2023-01-31',
-    vencimientoColor: 'text-green-600',
-    total: '$1,200.00',
-    pagado: '$1,200.00',
-    estado: 'Pagado',
-  },
-  {
-    folio: 'F001-0002',
-    cliente: 'Cliente B',
-    creacion: '2023-02-01',
-    vencimiento: '2023-02-28',
-    vencimientoColor: 'text-red-600',
-    total: '$800.00',
-    pagado: '$400.00',
-    estado: 'Pendiente',
-  },
-]
+const { data: invoices } = useQuery({
+  queryKey: ['product', props.id],
+  queryFn: () => getInvoicesByProductId(props.id as string),
+})
 
 const selectedInvoices = ref([])
 
 const { data, isLoading } = useQuery({
-  queryKey: ['product', props.id],
+  queryKey: ['product-detail', props.id],
   queryFn: () => getProductById(props.id as string),
 })
+
+console.log(data)
 </script>
