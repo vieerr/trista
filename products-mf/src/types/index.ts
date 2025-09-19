@@ -5,7 +5,10 @@ export interface Product {
   reference?: string
   unit: string
   price: number
-  tax: object,
+  tax: object
+  taxRate?: number
+  taxName?: string
   description?: string
   image?: File | null
+  image_url?: string
 }

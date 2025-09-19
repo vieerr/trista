@@ -30,3 +30,13 @@ export const createProduct = async (product: FormData): Promise<void> => {
     throw error
   }
 }
+
+export const getProductById = async (id: string): Promise<Product | null> => {
+  try {
+    const response = await axios.get(`${getApiBaseUrl()}/products/${id}`)
+    return response.data
+  } catch (error) {
+    console.error(`Error fetching product with id ${id}:`, error)
+    return null
+  }
+}
