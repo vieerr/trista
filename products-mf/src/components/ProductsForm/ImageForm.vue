@@ -36,13 +36,8 @@
         </div>
       </div>
     </template>
-
-    <template #content="{ files }">
-      <div>
-        <p>
-          <strong>{{ files[0]?.name }}</strong>
-        </p>
-      </div>
+    <template #content>
+      <div></div>
     </template>
   </FileUpload>
 </template>

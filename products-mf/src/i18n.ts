@@ -28,6 +28,8 @@ export const i18n = createI18n({
         description: 'Crea productos y/o servicios que podrás vender a tus clientes.',
         selectImage: 'Seleccionar imagen',
         save: 'Guardar ',
+        cancel: 'Cancelar',
+        create_again: 'Guardar y crear otro',
       },
     },
   },

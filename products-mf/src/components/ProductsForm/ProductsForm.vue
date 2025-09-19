@@ -1,16 +1,11 @@
 <template>
-  <Toast />
+  <Toaster richColors position="top-right" />
   <div class="flex gap-6">
     <!-- Left Side Form -->
     <div class="flex-1 bg-white rounded-md shadow-md p-6">
       <h3 class="text-gray-700 text-lg font-semibold mb-6">Información general</h3>
 
-      <Form
-        :initialValues="formValues"
-        :resolver="resolver"
-        @submit="onFormSubmit"
-        class="space-y-6"
-      >
+      <Form :initialValues="formValues" :resolver="resolver" class="space-y-6">
         <!-- Tipo de ítem -->
         <div>
           <label class="block text-sm font-medium text-gray-600 mb-2">Tipo de ítem *</label>
@@ -117,9 +112,26 @@
 
         <!-- Buttons -->
         <div class="flex justify-end gap-3 pt-4">
-          <!-- <Button label="Cancelar" outlined class="w-32"  /> -->
-          <Button icon="pi pi-save" type="submit" :label="t('products_form.save')" class="w-32" />
-          <!-- <Button type="submit" label="Guardar y crear o tro" outlined class="w-48" /> -->
+          <Button
+            type="button"
+            icon="pi pi-times"
+            severity="secondary"
+            :label="t('products_form.cancel')"
+            @click="goToProductsTable"
+          />
+          <Button
+            type="button"
+            icon="pi pi-plus"
+            severity="secondary"
+            :label="t('products_form.create_again')"
+            @click="handleCreateAgain"
+          />
+          <Button
+            type="submit"
+            @click="onFormSubmit({ redirect: true })"
+            icon="pi pi-save"
+            :label="t('products_form.save')"
+          />
         </div>
       </Form>
     </div>
@@ -141,13 +153,16 @@ import InputText from 'primevue/inputtext'
 import Textarea from 'primevue/textarea'
 import Select from 'primevue/select'
 import Button from 'primevue/button'
-import Toast from 'primevue/toast'
 import { zodResolver } from '@primevue/forms/resolvers/zod'
 import { productValidator } from '@/validators/ProductValidator'
 import InputNumber from 'primevue/inputnumber'
 import { useI18n } from 'vue-i18n'
 import { useMutation } from '@tanstack/vue-query'
 import { createProduct } from '@/services/products'
+import { Toaster, toast } from 'vue-sonner'
+import type { ZodError } from 'zod'
+import { useRouter } from 'vue-router'
+
 interface FormValues {
   type: 'Producto' | 'Servicio'
   name: string
@@ -159,15 +174,15 @@ interface FormValues {
   image: File | null
 }
 
+const router = useRouter()
 const { t } = useI18n()
 const imageForm = ref()
 
 const units = ref(['Unidad', 'Litro', 'Kilogramo', 'Metro', 'Caja'])
 
 const taxes = ref([
-  { name: 'IVA 0%', rate: 0 },
-  { name: 'IVA 12%', rate: 12 },
-  { name: 'IVA 15%', rate: 15 },
+  { name: 'IVA General 12%', rate: 12 },
+  { name: 'IVA Tarifa 0', rate: 0 },
 ])
 
 const formValues = reactive<FormValues>({
@@ -189,11 +204,18 @@ const computedTotal = computed(() => {
   return parseFloat((formValues.price + taxAmount).toFixed(2))
 })
 
+const redirectAfterCreate = ref(false)
+
 const { mutate: createProductMutation } = useMutation({
   mutationFn: (newProduct: FormData) => createProduct(newProduct),
   onSuccess: () => {
-    // Invalidate and refetch
-    console.log('Product created successfully')
+    toast.success('Producto creado con éxito')
+    if (redirectAfterCreate.value) {
+      goToProductsTable()
+    }
+  },
+  onError: () => {
+    toast.error('Error al crear el producto')
   },
 })
 
@@ -205,14 +227,42 @@ watch(
   { deep: true },
 )
 
-const onFormSubmit = () => {
-  const { success } = productValidator.safeParse(formValues)
+const goToProductsTable = () => {
+  router.push(router.getRoutes().find((route) => route.name === 'ProductsTable')!.path)
+}
+
+const handleCreateAgain = () => {
+  onFormSubmit({ redirect: false })
+  resetForm()
+}
+
+const resetForm = () => {
+  formValues.type = 'Producto'
+  formValues.name = ''
+  formValues.unit = ''
+  formValues.reference = ''
+  formValues.price = 0
+  formValues.tax = null
+  formValues.description = ''
+  formValues.image = null
+
+  if (imageForm.value) {
+    imageForm.value.resetForm()
+  }
+}
+
+const onFormSubmit = ({ redirect = true }: { redirect?: boolean } = {}) => {
+  redirectAfterCreate.value = redirect
+
+  const { success, error } = productValidator.safeParse(formValues)
+
   const formData: FormData = new FormData()
   formData.append('type', formValues.type)
   formData.append('name', formValues.name)
   formData.append('unit', formValues.unit)
   formData.append('reference', formValues.reference)
   formData.append('price', String(formValues.price))
+  formData.append('status', 'active')
   if (formValues.tax) {
     formData.append('taxName', formValues.tax.name)
     formData.append('taxRate', String(formValues.tax.rate))
@@ -221,12 +271,17 @@ const onFormSubmit = () => {
   formData.append('description', formValues.description)
 
   if (imageForm.value?.files[0]) {
-    // Append the actual File object
     formData.append('image', imageForm.value.files[0])
   }
 
+  // const { success, error } = productValidator.safeParse(formData)
   if (success) {
-    createProductMutation(formData) // backend expects multipart/form-data
+    createProductMutation(formData)
+  } else {
+    toast.error(
+      'Error en la validación del formulario:\n' +
+        (error as ZodError).issues.map((err) => err.message).join(' || '),
+    )
   }
 
   console.log('FormData being sent:', formData)

@@ -10,7 +10,7 @@
         size="small"
         paginator
         :rows="10"
-        :value="products"
+        :value="sortedProducts"
         :rowClass="() => 'group cursor-pointer'"
         tableStyle="width: 100%; table-layout: fixed;"
       >
@@ -79,7 +79,7 @@ import Column from 'primevue/column'
 import InputText from 'primevue/inputtext'
 import IconField from 'primevue/iconfield'
 import InputIcon from 'primevue/inputicon'
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import { fetchProducts } from '@/services/products'
 import type { Product } from '@/types'
 import { useQuery } from '@tanstack/vue-query'
@@ -96,7 +96,7 @@ const { data: products } = useQuery<Product[]>({
   queryKey: ['products'],
   queryFn: fetchProducts,
 })
-
+const sortedProducts = computed(() => (products.value ?? []).slice().reverse())
 const filters = ref({
   global: { value: null, matchMode: FilterMatchMode.CONTAINS },
   name: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
