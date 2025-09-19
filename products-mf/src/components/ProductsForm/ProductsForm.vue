@@ -111,28 +111,6 @@
         </div>
 
         <!-- Buttons -->
-        <div class="flex justify-end gap-3 pt-4">
-          <Button
-            type="button"
-            icon="pi pi-times"
-            severity="secondary"
-            :label="t('products_form.cancel')"
-            @click="goToProductsTable"
-          />
-          <Button
-            type="button"
-            icon="pi pi-plus"
-            severity="secondary"
-            :label="t('products_form.create_again')"
-            @click="handleCreateAgain"
-          />
-          <Button
-            type="submit"
-            @click="onFormSubmit({ redirect: true })"
-            icon="pi pi-save"
-            :label="t('products_form.save')"
-          />
-        </div>
       </Form>
     </div>
 
@@ -141,6 +119,32 @@
       <ImageForm ref="imageForm" />
       <p class="text-gray-600 font-medium">{{ formValues.name || 'Producto sin nombre' }}</p>
       <p class="text-lg font-semibold text-gray-800">$ {{ computedTotal }}</p>
+      <div class="flex flex-col justify-between items-stretch w-full gap-3 pt-4">
+        <div class="flex justify-between gap-3">
+          <Button
+            type="button"
+            icon="pi pi-times"
+            severity="secondary"
+            :label="t('products_form.cancel')"
+            @click="goToProductsTable"
+          />
+
+          <Button
+            type="submit"
+            @click="onFormSubmit({ redirect: true })"
+            icon="pi pi-save"
+            :label="t('products_form.save')"
+          />
+        </div>
+
+        <Button
+          type="button"
+          icon="pi pi-plus"
+          severity="secondary"
+          :label="t('products_form.create_again')"
+          @click="handleCreateAgain"
+        />
+      </div>
     </div>
   </div>
 </template>

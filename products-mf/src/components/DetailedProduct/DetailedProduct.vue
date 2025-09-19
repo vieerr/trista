@@ -54,11 +54,31 @@
               alt="Imagen del producto"
             /> -->
             <Image
+              v-if="data?.image_url"
               class="w-52 h-52 object-contain mb-4 border border-dashed rounded"
               :src="data?.image_url"
               alt="Image"
               preview
             />
+            <div
+              v-else
+              class="w-52 h-52 mb-4 flex items-center justify-center border border-dashed rounded"
+              src="https://via.placeholder.com/200x200.png?text=No+Image"
+              alt="No Image"
+              preview
+            >
+              <i
+                class="pi pi-image text-gray-400"
+                style="
+                  font-size: 4.5rem;
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                  height: 100%;
+                "
+              >
+              </i>
+            </div>
             <div class="text-center">
               <p class="text-gray-500">Precio Total</p>
               <p class="text-xl font-bold">
