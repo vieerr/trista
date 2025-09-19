@@ -91,7 +91,6 @@
             <p>
               <span class="text-gray-500 font-light"> {{ t('invoices_detail.clientId') }}: </span>
               <span class="text-gray-500 font-medium">
-                <!-- 9999999999999 -->
                 {{ invoice?.client_id }}
               </span>
             </p>
@@ -231,7 +230,17 @@ const invoiceContent = ref<HTMLElement | null>(null)
 
 const { data: invoice } = useQuery<Invoice | null>({
   queryKey: ['invoice', props.id],
-  queryFn: () => fetchInvoiceById(props.id as string),
+  queryFn: async () => {
+    const res = await fetchInvoiceById(props.id as string)
+    if (res) {
+      res.products = res.products.map((item) => ({
+        ...item,
+        productName: item.product?.name,
+        description: item.product?.description,
+      }))
+    }
+    return res
+  },
 })
 
 const columns = [

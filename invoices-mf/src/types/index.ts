@@ -40,6 +40,7 @@ export interface Product {
   name: string
   price: number
   total?: number
+  description?: string
   image_url?: string
   taxRate?: number
   taxName?: string

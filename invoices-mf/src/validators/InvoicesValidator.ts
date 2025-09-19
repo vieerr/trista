@@ -16,7 +16,9 @@ export const invoiceSchema = z.object({
   products: z
     .array(
       z.object({
-        productName: z.string('Al menos un producto es requerido'),
+        product: z.object({
+          _id: z.string('Seleccionar un producto es requerido'),
+        }),
       }),
     )
     .min(1, { message: 'Al menos un producto es requerido' }),

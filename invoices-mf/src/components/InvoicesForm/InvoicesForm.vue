@@ -259,6 +259,7 @@ const onFormSubmit = ({ redirect = true }: { redirect?: boolean }) => {
     status: 'Pending',
   }
 
+  console.log(formData)
   const { success, error } = schema.safeParse(formData)
   if (success) {
     createInvoiceMutation(formData as unknown as Invoice)

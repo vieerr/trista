@@ -73,7 +73,7 @@ export const i18n = createI18n({
         title: 'Detalle de la Factura',
         client: 'Cliente',
         address: 'Dirección',
-        date: 'Fecha',
+        date: 'Fecha de Operación',
         due_date: 'Fecha Límite',
         clientId: 'Identificación (Cédula)',
         clientPhone: 'Teléfono',

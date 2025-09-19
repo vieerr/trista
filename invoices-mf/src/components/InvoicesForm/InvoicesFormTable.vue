@@ -202,7 +202,7 @@ const calculateRowTotal = (row: ProductRow) => {
 const getProductRows = () => {
   const mappedRows = rows.map((row) => ({
     row_id: row.row_id,
-    productName: row.product?.name,
+    product: row.product,
     reference: row.reference,
     price: row.price,
     discount: row.discount,
