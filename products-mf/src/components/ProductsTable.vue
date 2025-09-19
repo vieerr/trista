@@ -6,10 +6,12 @@
         v-model:filters="filters"
         filterDisplay="row"
         removableSort
+        @row-click="onRowClick"
         size="small"
         paginator
         :rows="10"
         :value="products"
+        :rowClass="() => 'group cursor-pointer'"
         tableStyle="width: 100%; table-layout: fixed;"
       >
         <template #header>
@@ -36,6 +38,7 @@
           class="selection-column"
         ></Column>
         <Column
+          :bodyClass="'group-hover:bg-gray-100 transition-colors'"
           v-for="col of columns"
           :key="col.field"
           :field="col.field"
@@ -82,8 +85,10 @@ import type { Product } from '@/types'
 import { useQuery } from '@tanstack/vue-query'
 import { FilterMatchMode } from '@primevue/core/api'
 import { useI18n } from 'vue-i18n'
+import { useRouter } from 'vue-router'
 
 const { t } = useI18n()
+const router = useRouter()
 
 const selectedProducts = ref<Product[]>([])
 
@@ -108,4 +113,13 @@ const columns = ref([
   { field: 'description', header: t('products.description'), translate: false, width: '22%' },
   { field: 'taxName', header: t('products.taxName'), translate: false, width: '16%' },
 ])
+
+const onRowClick = (event: { data: Product }) => {
+  router.push(
+    router
+      .getRoutes()
+      .find((route) => route.name === 'ViewProduct')!
+      .path.replace(':id', event.data._id!),
+  )
+}
 </script>
