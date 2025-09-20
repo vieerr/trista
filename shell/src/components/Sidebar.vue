@@ -17,9 +17,9 @@
       <!-- Menu -->
       <Menu :model="menuItems" class="flex-1 p-2">
         <template #start>
-          <div class="flex items-center h-14 mx-2 border-b border-gray-200">
-            <span class="font-semibold"> (╥‸╥) </span>
-            <span class="font-semibold ml-2 text-2xl text-gray-600 font-mono">
+          <div class="flex items-center h-22 mx-4 border-b border-gray-200">
+            <span class="font-semibold text-lg"> (╥‸╥) </span>
+            <span class="font-semibold ml-3 text-2xl text-gray-600 font-mono">
               trista
             </span>
             <!-- Close button (only on mobile) -->
@@ -38,10 +38,10 @@
         <template #item="{ item, props }">
           <a
             v-ripple
-            class="flex justify-between items-center m-0 p-0 group"
+            class="flex justify-between items-center m-0 my-6 p-0 group"
             v-bind="props.action"
           >
-            <div class="p-0">
+            <div class="p-0 text-gray-700">
               <span :class="item.icon" />
               <span class="ml-3 text-sm">{{ t(`${item.label}`) }}</span>
             </div>
@@ -59,22 +59,21 @@
         </template>
       </Menu>
 
-      <!-- User footer -->
-      <div class="p-4 border-t">
-        <button
-          v-ripple
-          class="flex items-center w-full text-left hover:bg-gray-100 p-2 rounded-lg transition"
+      <!-- Created by section -->
+      <div class="p-4 border-t flex items-center justify-between">
+        <div>
+          <p class="font-semibold">{{ t("createdBy") }}</p>
+          <p class="text-sm text-gray-500">Olivier Paspuel</p>
+          <p class="text-sm text-gray-500">@vieerr</p>
+        </div>
+        <a
+          href="https://github.com/vieerr"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="text-gray-500 hover:text-gray-700 transition"
         >
-          <Avatar
-            image="https://primefaces.org/cdn/primevue/images/avatar/amyelsner.png"
-            class="mr-3"
-            shape="circle"
-          />
-          <div>
-            <p class="font-semibold">Amy Elsner</p>
-            <p class="text-sm text-gray-500">Admin</p>
-          </div>
-        </button>
+          <i class="pi pi-github" style="font-size: xx-large"></i>
+        </a>
       </div>
     </aside>
 
@@ -87,7 +86,6 @@
 
 <script setup lang="ts">
 import Menu from "primevue/menu";
-import Avatar from "primevue/avatar";
 import Badge from "primevue/badge";
 import { Button } from "primevue";
 import { ref } from "vue";

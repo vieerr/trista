@@ -328,6 +328,9 @@ importers:
       '@tanstack/vue-query-devtools':
         specifier: ^5.87.4
         version: 5.87.4(@tanstack/vue-query@5.87.4(vue@3.5.21(typescript@5.8.3)))(vue@3.5.21(typescript@5.8.3))
+      primeicons:
+        specifier: ^7.0.0
+        version: 7.0.0
       primevue:
         specifier: ^4.3.9
         version: 4.3.9(vue@3.5.21(typescript@5.8.3))

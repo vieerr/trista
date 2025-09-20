@@ -2,8 +2,10 @@ import { createI18n, type I18n } from "vue-i18n";
 
 export const setupI18n = async (options = { locale: "es" }): Promise<I18n> => {
   let messages = {
-    Home: "Inicio",
     Invoices: "Facturas",
+    Dashboard: "Inicio",
+    Products: "Productos",
+    createdBy: "Creado por",
   };
 
   try {
