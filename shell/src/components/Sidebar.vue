@@ -38,7 +38,7 @@
         <template #item="{ item, props }">
           <a
             v-ripple
-            class="flex justify-between items-center m-0 my-6 p-0 group"
+            class="flex justify-between items-center m-0 my-1 p-0 group"
             v-bind="props.action"
           >
             <div class="p-0 text-gray-700">
