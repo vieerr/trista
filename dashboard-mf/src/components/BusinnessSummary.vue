@@ -2,14 +2,51 @@
   <div class="p-6 space-y-6">
     <h2 class="text-xl font-semibold">Resumen del negocio</h2>
 
-    <!-- Chart -->
-    <SalesChart :data="salesData" />
+    <!-- If still loading, show skeletons -->
+    <template v-if="isLoading">
+      <!-- Chart skeleton -->
+      <Card class="p-4">
+        <CardHeader>
+          <Skeleton class="h-6 w-40 mb-2" />
+          <Skeleton class="h-4 w-64" />
+        </CardHeader>
+        <CardContent>
+          <Skeleton class="h-[300px] w-full" />
+        </CardContent>
+      </Card>
 
-    <!-- Tables -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-      <TopProducts :products="products" />
-      <TopCustomers :customers="customers" />
-    </div>
+      <!-- Tables skeleton -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <Card class="p-4">
+          <CardHeader>
+            <Skeleton class="h-6 w-32 mb-2" />
+            <Skeleton class="h-4 w-56" />
+          </CardHeader>
+          <CardContent class="space-y-2">
+            <Skeleton class="h-10 w-full" v-for="i in 5" :key="i" />
+          </CardContent>
+        </Card>
+
+        <Card class="p-4">
+          <CardHeader>
+            <Skeleton class="h-6 w-32 mb-2" />
+            <Skeleton class="h-4 w-56" />
+          </CardHeader>
+          <CardContent class="space-y-2">
+            <Skeleton class="h-10 w-full" v-for="i in 5" :key="i" />
+          </CardContent>
+        </Card>
+      </div>
+    </template>
+
+    <!-- Once all loaded, show actual components -->
+    <template v-else>
+      <SalesChart :data="salesData" />
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <TopProducts :products="products" />
+        <TopCustomers :customers="customers" />
+      </div>
+    </template>
   </div>
 </template>
 
@@ -17,20 +54,28 @@
 import SalesChart from './SalesChart.vue'
 import TopProducts from './TopProducts.vue'
 import TopCustomers from './TopCustomers.vue'
+import { Card, CardHeader, CardContent } from '@/components/ui/card'
+import { Skeleton } from '@/components/ui/skeleton'
+import { useQuery } from '@tanstack/vue-query'
+import { getSalesOverTime, getTopCustomers, getTopProducts } from '@/services/analytics'
+import { computed } from 'vue'
 
-const salesData = [
-  { date: '2025-09-01', value: 0 },
-  { date: '2025-09-13', value: 120 },
-  { date: '2025-09-15', value: 60 },
-  { date: '2025-09-17', value: 200 },
-  { date: '2025-09-19', value: 30 },
-]
+const { data: salesData, isLoading: isSalesDataLoading } = useQuery({
+  queryKey: ['salesData'],
+  queryFn: () => getSalesOverTime(),
+})
 
-const products = [
-  { concept: 'Camisa Polo', items: 10, total: 242 },
-  { concept: 'Pintura al óleo de gato', items: 3, total: 113.25 },
-  { concept: 'Pantalón de mezclilla', items: 1, total: 55.1 },
-]
+const { data: products, isLoading: isProductsLoading } = useQuery({
+  queryKey: ['products'],
+  queryFn: () => getTopProducts(),
+})
 
-const customers = [{ concept: 'Público en general', documents: 11, total: 410.35 }]
+const { data: customers, isLoading: isCustomersLoading } = useQuery({
+  queryKey: ['customers'],
+  queryFn: () => getTopCustomers(),
+})
+
+const isLoading = computed(
+  () => isSalesDataLoading.value || isProductsLoading.value || isCustomersLoading.value,
+)
 </script>
