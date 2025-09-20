@@ -6,7 +6,7 @@
     </CardHeader>
     <CardContent>
       <Table>
-        <TableHeader>
+        <TableHeader class="text-gray-700">
           <TableRow>
             <TableHead>Concepto</TableHead>
             <TableHead>N° Items</TableHead>
@@ -14,7 +14,7 @@
           </TableRow>
         </TableHeader>
         <TableBody>
-          <TableRow v-for="(product, i) in products" :key="i">
+          <TableRow class="text-gray-500" v-for="(product, i) in products" :key="i">
             <TableCell>{{ product.concept }}</TableCell>
             <TableCell>{{ product.items }}</TableCell>
             <TableCell>€{{ product.total.toFixed(2) }}</TableCell>
