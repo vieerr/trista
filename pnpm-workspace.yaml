@@ -2,3 +2,4 @@ packages:
   - "shell"
   - "invoices-mf"
   - "products-mf"
+  - "dashboard-mf"

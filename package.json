@@ -19,6 +19,7 @@
   "workspaces": [
     "shell",
     "invoices-mf",
-    "products-mf"
+    "products-mf",
+    "dashboard-mf"
   ]
 }
