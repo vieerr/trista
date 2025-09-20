@@ -19,6 +19,9 @@ export default defineConfig(({ mode }) => {
           products_mf: isProduction 
             ? "https://trista-products.vercel.app/assets/remoteEntry.js"
             : "http://localhost:4175/assets/remoteEntry.js",
+          dashboard_mf: isProduction
+            ? "https://trista-dashboard.vercel.app/assets/remoteEntry.js"
+            : "http://localhost:4176/assets/remoteEntry.js",
           },
         shared: ["vue", "@tanstack/vue-query", "vue-router"],
       }),

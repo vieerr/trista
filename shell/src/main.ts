@@ -9,6 +9,7 @@ import Aura from "@primeuix/themes/aura";
 try {
   await import("invoices_mf/invoices_css");
   await import("products_mf/products_css");
+  await import("dashboard_mf/dashboard_css");
 } catch (error) {
   console.error("Error loading microfrontends CSS:", error);
 }

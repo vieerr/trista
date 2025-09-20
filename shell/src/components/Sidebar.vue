@@ -70,9 +70,9 @@ const { t } = useI18n();
 
 const menuItems = ref([
   {
-    label: "Home",
+    label: "Dashboard",
     icon: "pi pi-home",
-    command: () => router.push("/home"),
+    command: () => router.push("/"),
   },
   {
     label: "Invoices",

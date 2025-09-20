@@ -1,7 +1,7 @@
 <template>
   <div class="flex h-screen">
     <Sidebar />
-    <main class="flex-1 p-6 overflow-auto bg-gray-50">
+    <main class="container py-10 w-5xl min-w-5xl mx-auto">
       <div>
         <RouterView />
       </div>
