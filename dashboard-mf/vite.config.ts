@@ -16,7 +16,7 @@ export default defineConfig({
         './dashboard_css': './src/dashboard.styles.js',
         // './ProductsI18n': './src/i18n.ts',
       },
-      shared: ['vue', 'vue-router', 'tailwindcss'],
+      shared: ['vue', 'vue-router', 'tailwindcss', '@tanstack/vue-query'],
     }),
   ],
   resolve: {
