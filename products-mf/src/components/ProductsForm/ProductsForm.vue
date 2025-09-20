@@ -1,5 +1,4 @@
 <template>
-  <Toaster richColors position="top-right" />
   <div class="flex gap-6">
     <!-- Left Side Form -->
     <div class="flex-1 bg-white rounded-md shadow-md p-6">
@@ -130,7 +129,7 @@
           />
 
           <Button
-            type="submit"
+            type="button"
             @click="onFormSubmit({ redirect: true })"
             icon="pi pi-save"
             :label="t('products_form.save')"
@@ -151,7 +150,7 @@
 
 <script lang="ts" setup>
 import ImageForm from './ImageForm.vue'
-import { reactive, computed, ref, watch } from 'vue'
+import { reactive, computed, ref } from 'vue'
 import { Form } from '@primevue/forms'
 import InputText from 'primevue/inputtext'
 import Textarea from 'primevue/textarea'
@@ -162,10 +161,11 @@ import { productValidator } from '@/validators/ProductValidator'
 import InputNumber from 'primevue/inputnumber'
 import { useI18n } from 'vue-i18n'
 import { useMutation } from '@tanstack/vue-query'
-import { createProduct } from '@/services/products'
-import { Toaster, toast } from 'vue-sonner'
+import { createProduct, updateProduct } from '@/services/products'
+import { toast } from 'vue-sonner'
 import type { ZodError } from 'zod'
-import { useRouter } from 'vue-router'
+import { onBeforeRouteLeave, useRouter } from 'vue-router'
+import { useProductStore } from '@/stores/productStore'
 
 interface FormValues {
   type: 'Producto' | 'Servicio'
@@ -178,10 +178,13 @@ interface FormValues {
   image: File | null
 }
 
+const productStore = useProductStore()
 const router = useRouter()
 const { t } = useI18n()
-const imageForm = ref()
 
+const resolver = ref(zodResolver(productValidator))
+const imageForm = ref()
+const redirectAfterCreate = ref(false)
 const units = ref(['Unidad', 'Litro', 'Kilogramo', 'Metro', 'Caja'])
 
 const taxes = ref([
@@ -200,15 +203,26 @@ const formValues = reactive<FormValues>({
   image: null,
 })
 
-const resolver = ref(zodResolver(productValidator))
+const isEdit = computed(() => !!productStore.selectedProduct?._id)
+console.log(isEdit.value)
+if (isEdit.value) {
+  formValues.type = productStore.selectedProduct?.type as 'Producto' | 'Servicio'
+  formValues.name = productStore.selectedProduct?.name || ''
+  formValues.unit = productStore.selectedProduct?.unit || ''
+  formValues.reference = productStore.selectedProduct?.reference || ''
+  formValues.price = productStore.selectedProduct?.price || 0
+  formValues.tax = {
+    name: productStore.selectedProduct?.taxName ?? taxes.value[0].name,
+    rate: productStore.selectedProduct?.taxRate ?? taxes.value[0].rate,
+  }
+  formValues.description = productStore.selectedProduct?.description || ''
+}
 
 const computedTotal = computed(() => {
   if (!formValues.tax) return Number(formValues.price.toFixed(2))
   const taxAmount = (formValues.price * formValues.tax.rate) / 100
   return parseFloat((formValues.price + taxAmount).toFixed(2))
 })
-
-const redirectAfterCreate = ref(false)
 
 const { mutate: createProductMutation } = useMutation({
   mutationFn: (newProduct: FormData) => createProduct(newProduct),
@@ -223,13 +237,20 @@ const { mutate: createProductMutation } = useMutation({
   },
 })
 
-watch(
-  () => imageForm.value?.files[0],
-  (newFiles, oldFiles) => {
-    console.log('Image files changed:', { oldFiles, newFiles })
+const { mutate: updateProductMutation } = useMutation({
+  mutationFn: (updatedProduct: FormData) =>
+    updateProduct(productStore.selectedProduct?._id as string, updatedProduct),
+  onSuccess: () => {
+    toast.success('Producto actualizado con éxito')
+
+    if (redirectAfterCreate.value) {
+      goToProductsTable()
+    }
   },
-  { deep: true },
-)
+  onError: () => {
+    toast.error('Error al actualizar el producto')
+  },
+})
 
 const goToProductsTable = () => {
   router.push(router.getRoutes().find((route) => route.name === 'ProductsTable')!.path)
@@ -280,7 +301,11 @@ const onFormSubmit = ({ redirect = true }: { redirect?: boolean } = {}) => {
 
   // const { success, error } = productValidator.safeParse(formData)
   if (success) {
-    createProductMutation(formData)
+    if (isEdit.value) {
+      updateProductMutation(formData)
+    } else {
+      createProductMutation(formData)
+    }
   } else {
     toast.error(
       'Error en la validación del formulario:\n' +
@@ -290,4 +315,8 @@ const onFormSubmit = ({ redirect = true }: { redirect?: boolean } = {}) => {
 
   console.log('FormData being sent:', formData)
 }
+
+onBeforeRouteLeave(() => {
+  productStore.cleanSelectedProduct()
+})
 </script>

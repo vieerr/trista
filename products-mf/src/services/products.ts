@@ -50,3 +50,13 @@ export const getInvoicesByProductId = async (id: string): Promise<Invoice[]> => 
     return []
   }
 }
+
+
+export const updateProduct = async (id: string, product: FormData): Promise<void> => {
+  try {
+    await axios.patch(`${getApiBaseUrl()}/products/${id}`, product)
+  } catch (error) {
+    console.error(`Error updating product with id ${id}:`, error)
+    throw error
+  }
+}

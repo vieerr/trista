@@ -86,9 +86,11 @@ import { useQuery } from '@tanstack/vue-query'
 import { FilterMatchMode } from '@primevue/core/api'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
+import { useProductStore } from '@/stores/productStore'
 
 const { t } = useI18n()
 const router = useRouter()
+const productStore = useProductStore()
 
 const selectedProducts = ref<Product[]>([])
 
@@ -115,6 +117,7 @@ const columns = ref([
 ])
 
 const onRowClick = (event: { data: Product }) => {
+  productStore.setSelectedProduct(event.data)
   router.push(
     router
       .getRoutes()

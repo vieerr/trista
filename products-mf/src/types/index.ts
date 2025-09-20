@@ -11,7 +11,7 @@ export interface Product {
   description?: string
   image?: File | null
   image_url?: string
-  status: 'active' | 'inactive'
+  active: boolean
 }
 
 export interface InvoiceProduct {

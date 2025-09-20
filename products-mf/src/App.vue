@@ -1,4 +1,5 @@
 <template>
+  <Toaster richColors position="top-right" :duration="2500" />
   <div class="flex h-screen">
     <!--  sidebar placeholder for DX purposes -->
     <aside class="w-64 bg-gray-800 text-white">
@@ -24,5 +25,6 @@
 
 <script setup lang="ts">
 import { RouterView, RouterLink } from 'vue-router'
+import { Toaster } from 'vue-sonner'
 import { VueQueryDevtools } from '@tanstack/vue-query-devtools'
 </script>

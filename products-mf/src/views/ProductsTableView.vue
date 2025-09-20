@@ -3,8 +3,8 @@ import ProductsTable from '@/components/ProductsTable.vue'
 import { useI18n } from 'vue-i18n'
 import { Card } from 'primevue'
 import Button from 'primevue/button'
-const { t } = useI18n()
 import { useRouter } from 'vue-router'
+const { t } = useI18n()
 
 const router = useRouter()
 

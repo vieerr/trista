@@ -1,4 +1,5 @@
 <template>
+  <Toaster richColors position="top-right" />
   <div class="p-4">
     <!-- Action Buttons -->
     <div class="flex gap-2 mb-5"></div>
@@ -32,13 +33,30 @@
             </div>
             <div class="col-span-2 flex mt-4 gap-4 justify-end">
               <Button
+                v-if="data?.active"
                 size="small"
                 label="Desactivar"
                 variant="outlined"
                 severity="danger"
+                @click="deactivateProduct()"
                 icon="pi pi-ban"
               />
-              <Button size="small" label="Editar" icon="pi pi-pencil" outlined />
+              <Button
+                v-else
+                size="small"
+                label="Activar"
+                variant="outlined"
+                severity="success"
+                @click="activateProduct()"
+                icon="pi pi-check"
+              />
+              <Button
+                size="small"
+                label="Editar"
+                icon="pi pi-pencil"
+                outlined
+                @click="editProduct()"
+              />
               <Button size="small" label="Facturar este ítem" outlined icon="pi pi-plus" />
             </div>
           </div>
@@ -175,14 +193,20 @@
 </template>
 
 <script lang="ts" setup>
-import { getInvoicesByProductId, getProductById } from '@/services/products'
-import { useQuery } from '@tanstack/vue-query'
+import { getInvoicesByProductId, getProductById, updateProduct } from '@/services/products'
+import { toast, Toaster } from 'vue-sonner'
+import { useMutation, useQuery } from '@tanstack/vue-query'
 import { Button, Card, DataTable, Column, Image } from 'primevue'
 import { formatCurrency } from '@/utils'
 import { ref } from 'vue'
+import { useQueryClient } from '@tanstack/vue-query'
+import { useRouter } from 'vue-router'
+
 const props = defineProps({
   id: String,
 })
+const queryClient = useQueryClient()
+const router = useRouter()
 
 const { data: invoices } = useQuery({
   queryKey: ['product', props.id],
@@ -196,5 +220,29 @@ const { data, isLoading } = useQuery({
   queryFn: () => getProductById(props.id as string),
 })
 
-console.log(data)
+const changeProductStatus = useMutation({
+  mutationKey: ['deactivate-product'],
+  mutationFn: (active: boolean) => {
+    const formData = new FormData()
+    formData.append('active', active.toString())
+    return updateProduct(props.id as string, formData)
+  },
+  onSuccess: () => {
+    toast.success('Producto actualizado con éxito')
+    // Refetch product details
+    queryClient.invalidateQueries({ queryKey: ['product-detail', props.id] })
+  },
+})
+
+const deactivateProduct = () => {
+  changeProductStatus.mutate(false)
+}
+
+const activateProduct = () => {
+  changeProductStatus.mutate(true)
+}
+
+const editProduct = () => {
+  router.push(`/add`)
+}
 </script>
