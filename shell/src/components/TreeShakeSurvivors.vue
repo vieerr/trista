@@ -18,7 +18,7 @@
   <Card style="display: none" />
   <InputNumber style="display: none" />
   <Textarea style="display: none" />
-  <FileUpload style="display: none" />
+  <FileUpload style="display: none" hidden />
 </template>
 
 <script setup lang="ts">
