@@ -14,20 +14,18 @@
     </template>
     <template #header="{ chooseCallback, clearCallback, files }">
       <div
-        class="w-full h-52 flex flex-col items-center justify-center gap-2 p-4 border-2 border-dashed border-gray-300 rounded cursor-pointer"
+        class="w-full h-80 p-3 pb-0 border-2 border-dashed border-gray-300 rounded cursor-pointer"
         @click="chooseCallback"
       >
-        <div v-if="existingImage">
-          <div class="w-full h-full relative">
-            <img :src="existingImage" alt="Preview" class="w-full h-full object-cover rounded" />
-          </div>
+        <div class="w-full h-72 relative" v-if="existingImage">
+          <img :src="existingImage" alt="Preview" class="w-full h-full object-contain rounded" />
         </div>
         <div v-else>
           <div v-if="files.length > 0" class="w-full h-full relative">
             <img
               :src="fileObjectURL(files[0])"
+              class="w-52 flex justify-center h-52 mb-4"
               alt="Preview"
-              class="w-full h-full object-cover rounded"
             />
             <button
               @click.stop="clearCallback"

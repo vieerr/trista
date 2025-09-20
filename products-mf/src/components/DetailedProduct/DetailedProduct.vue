@@ -73,7 +73,7 @@
             /> -->
             <Image
               v-if="data?.image_url"
-              class="w-52 h-52 object-contain mb-4 border border-dashed rounded"
+              class="w-52 flex justify-center h-52 mb-4 border border-dashed rounded"
               :src="data?.image_url"
               alt="Image"
               preview

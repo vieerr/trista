@@ -25,7 +25,9 @@ export const i18n = createI18n({
       },
       products_form: {
         title: 'Nuevo producto o servicio',
+        edit_title: 'Editar producto o servicio',
         description: 'Crea productos y/o servicios que podrás vender a tus clientes.',
+        edit_description: 'Edita el producto y/o servicio seleccionado.',
         selectImage: 'Seleccionar imagen',
         save: 'Guardar ',
         cancel: 'Cancelar',

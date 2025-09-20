@@ -22,9 +22,9 @@
               class="w-32"
             />
           </div>
-          <p class="text-xs text-gray-400 mt-2">
+          <!-- <p class="text-xs text-gray-400 mt-2">
             Ten en cuenta que, una vez creado, no podrás cambiar el tipo de ítem.
-          </p>
+          </p> -->
         </div>
 
         <!-- Nombre -->
@@ -114,11 +114,11 @@
     </div>
 
     <!-- Right Side Preview -->
-    <div class="w-72 bg-white rounded-md shadow-md flex flex-col items-center p-6">
+    <div class="w-72 bg-white rounded-md shadow-md flex flex-col  items-center p-6">
       <ImageForm ref="imageForm" />
-      <p class="text-gray-600 font-medium">{{ formValues.name || 'Producto sin nombre' }}</p>
+      <p class="text-gray-600 pt-8 font-medium">{{ formValues.name || 'Producto sin nombre' }}</p>
       <p class="text-lg font-semibold text-gray-800">$ {{ computedTotal }}</p>
-      <div class="flex flex-col justify-between items-stretch w-full gap-3 pt-4">
+      <div class="flex flex-col justify-between items-stretch w-full gap-3 pt-10">
         <div class="flex justify-between gap-3">
           <Button
             type="button"
@@ -137,7 +137,8 @@
         </div>
 
         <Button
-          type="button"
+        v-if="!isEdit"
+        type="button"
           icon="pi pi-plus"
           severity="secondary"
           :label="t('products_form.create_again')"
