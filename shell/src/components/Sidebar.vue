@@ -83,7 +83,6 @@
     </main>
   </div>
 </template>
-
 <script setup lang="ts">
 import Menu from "primevue/menu";
 import Badge from "primevue/badge";
@@ -96,25 +95,64 @@ const router = useRouter();
 const { t } = useI18n();
 const isOpen = ref(false);
 
+// util to register routes once
+async function ensureRoutes(key: "dashboard" | "invoices" | "products") {
+  let mod: any;
+
+  if (key === "invoices") {
+    mod = await import("invoices_mf/InvoicesRoutes");
+  } else if (key === "products") {
+    mod = await import("products_mf/ProductsRoutes");
+  }
+
+  if (mod?.default) {
+    const prefixedRoutes = (await mod.default).map((r: any) => {
+      let base = key === "dashboard" ? "" : `/${key}`;
+      return { ...r, path: `${base}${r.path}` };
+    });
+
+    prefixedRoutes.forEach((route: any) => {
+      if (!router.hasRoute(route.name)) {
+        router.addRoute(route);
+      }
+    });
+  }
+}
+
 const menuItems = ref([
   {
     label: "Dashboard",
     icon: "pi pi-home",
-    command: () => router.push("/"),
+    command: async () => {
+      await ensureRoutes("dashboard");
+      router.push("/");
+    },
   },
   {
     label: "Invoices",
     icon: "pi pi-receipt",
-    command: () => router.push("/invoices"),
+    command: async () => {
+      await ensureRoutes("invoices");
+      router.push("/invoices");
+    },
     createButton: true,
-    createCommand: () => router.push("/invoices/add"),
+    createCommand: async () => {
+      await ensureRoutes("invoices");
+      router.push("/invoices/add");
+    },
   },
   {
     label: "Products",
     icon: "pi pi-box",
-    command: () => router.push("/products"),
+    command: async () => {
+      await ensureRoutes("products");
+      router.push("/products");
+    },
     createButton: true,
-    createCommand: () => router.push("/products/add"),
+    createCommand: async () => {
+      await ensureRoutes("products");
+      router.push("/products/add");
+    },
   },
 ]);
 </script>
