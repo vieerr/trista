@@ -1,11 +1,14 @@
 <template>
   <Toaster richColors position="top-right" />
   <div class="p-4">
+
     <!-- Action Buttons -->
     <div class="flex gap-2 mb-5"></div>
 
+
     <!-- Content -->
     <div class="grid grid-cols-3 gap-4">
+
       <!-- Left side: product details -->
       <Card class="col-span-2">
         <template #header>
@@ -69,10 +72,12 @@
         </template>
       </Card>
 
+
       <!-- Right side: image & price -->
       <Card>
         <template #content>
           <div class="flex flex-col items-center">
+
             <!-- <img
               :src="data?.image_url"
               alt="Imagen del producto"
@@ -138,54 +143,28 @@
         dataKey="_id"
         class="text-sm"
         selectionMode="checkbox"
+        @row-click="onRowClick"
         v-model:selection="selectedInvoices"
         paginator
-        :rows="20"
+        :rows="10"
         :rowsPerPageOptions="[10, 20, 50]"
-        tableStyle="min-width: 60rem"
+        tableStyle="min-width: 55rem"
         removableSort
       >
-        <!-- Checkbox column -->
+
+      <!-- Checkbox column -->
         <Column selectionMode="multiple" headerStyle="width:3rem"></Column>
 
-        <!-- Invoice Number -->
-        <Column field="number" header="Número de Factura" sortable>
-          <template #body="{ data }">
-            <a href="#" class="text-teal-600 hover:underline">
-              {{ data.number }}
-            </a>
-          </template>
-        </Column>
 
-        <!-- Client Name -->
-        <Column field="client_name" header="Cliente" sortable>
-          <template #body="{ data }">
-            <a href="#" class="text-teal-600 hover:underline">
-              {{ data.client_name }}
-            </a>
-          </template>
-        </Column>
-
-        <!-- Operation Date -->
-        <Column field="operation_date" header="Fecha de Operación" sortable></Column>
-
-        <!-- Due Date -->
-        <Column field="due_date" header="Fecha de Vencimiento" sortable>
-          <template #body="{ data }">
-            <span :class="data.status === 'Vencido' ? 'text-red-500' : 'text-green-500'">
-              {{ data.due_date }}
-            </span>
-          </template>
-        </Column>
-
-        <!-- Total -->
+        <Column field="number" header="Número" sortable headerStyle="width: 5rem"/>
+        <Column field="client_name" header="Cliente" sortable />
+        <Column field="operation_date" header="Fecha de Operación" sortable/>
+        <Column field="due_date" header="Fecha de Vencimiento" sortable/>
         <Column field="total" header="Total" sortable>
           <template #body="{ data }">
             {{ formatCurrency(data.total) }}
           </template>
         </Column>
-
-        <!-- Status -->
         <Column field="status" header="Estado" sortable>
           <template #body="{ data }">
             <span :class="data.status === 'Pagado' ? 'text-green-500' : 'text-yellow-500'">
@@ -248,6 +227,16 @@ const deactivateProduct = () => {
 
 const activateProduct = () => {
   changeProductStatus.mutate(true)
+}
+
+const onRowClick = (event: { data: { number: string } }) => {
+  const number = event.data.number
+  router.push(
+    router
+      .getRoutes()
+      .find((route) => route.name === 'ViewInvoice')!
+      .path.replace(':id', number),
+  )
 }
 
 const editProduct = () => {
