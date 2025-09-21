@@ -23,7 +23,7 @@ export default defineConfig(({ mode }) => {
             ? "https://trista-dashboard.vercel.app/assets/remoteEntry.js"
             : "http://localhost:4176/assets/remoteEntry.js",
           },
-        shared: ["vue", "@tanstack/vue-query", "vue-router"],
+        shared: ["vue", "@tanstack/vue-query", "vue-router", "pinia"],
       }),
     ],
     server: {

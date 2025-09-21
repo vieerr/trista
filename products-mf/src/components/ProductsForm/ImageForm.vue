@@ -14,7 +14,7 @@
     </template>
     <template #header="{ chooseCallback, clearCallback, files }">
       <div
-        class="w-full h-80 p-3 pb-0 border-2 border-dashed border-gray-300 rounded cursor-pointer"
+        class="w-full h-48 p-3 pb-0 border-2 border-dashed border-gray-300 rounded cursor-pointer"
         @click="chooseCallback"
       >
         <div class="w-full h-72 relative" v-if="existingImage">
@@ -56,7 +56,6 @@ import { useI18n } from 'vue-i18n'
 const { t } = useI18n()
 const productStore = useProductStore()
 const existingImage = ref<string | null>(productStore.selectedProduct?.image_url || null)
-console.log(existingImage.value)
 const files = ref<File[]>([])
 
 const onSelectedFiles = (event: { files: File[] }) => {

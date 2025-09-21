@@ -57,7 +57,13 @@
                 outlined
                 @click="editProduct()"
               />
-              <Button size="small" label="Facturar este ítem" outlined icon="pi pi-plus" />
+              <Button
+                size="small"
+                label="Facturar este ítem"
+                outlined
+                icon="pi pi-plus"
+                @click="billProduct()"
+              />
             </div>
           </div>
         </template>
@@ -244,5 +250,9 @@ const activateProduct = () => {
 
 const editProduct = () => {
   router.push(`/add`)
+}
+
+const billProduct = () => {
+  router.push(router.getRoutes().find((route) => route.name === 'AddInvoice')!.path)
 }
 </script>

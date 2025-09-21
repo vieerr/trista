@@ -13,6 +13,10 @@ try {
 } catch (error) {
   console.error("Error loading microfrontends CSS:", error);
 }
+import { createPinia } from "pinia";
+
+const pinia = createPinia();
+
 createApp(App)
   .use(PrimeVue, {
     theme: {
@@ -27,4 +31,5 @@ createApp(App)
   .use(router)
   .use(i18n)
   .use(VueQueryPlugin)
+  .use(pinia)
   .mount("#app");
