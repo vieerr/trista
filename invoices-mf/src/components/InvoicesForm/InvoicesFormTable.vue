@@ -136,8 +136,11 @@ import { fetchProducts } from '@/services/products'
 import type { ProductRow, Product } from '@/types'
 import InvoicePriceDetail from './InvoicePriceDetail.vue'
 import { InputNumber } from 'primevue'
+import { useRoute } from 'vue-router'
 
 const { t } = useI18n()
+const route = useRoute()
+
 
 const { data: products } = useQuery({ queryKey: ['products'], queryFn: fetchProducts })
 const productOptions = computed(() => products.value ?? [])
@@ -168,6 +171,29 @@ watch(
   },
   { deep: true },
 )
+
+watch(
+  () => route.query.product,
+  (newProductId) => {
+    if (newProductId && products.value) {
+      const prod = products.value.find((p) => p._id === newProductId)
+      if (prod) {
+        rows[0] = {
+          ...createRow(),
+          product: prod,
+          price: prod.price || 0,
+          tax: {
+            rate: prod.taxRate || 0,
+            name: prod.taxName || '',
+          },
+          reference: prod.reference,
+        }
+      }
+    }
+  },
+  { immediate: true },
+)
+
 const addRow = () => {
   rows.push(createRow())
 }

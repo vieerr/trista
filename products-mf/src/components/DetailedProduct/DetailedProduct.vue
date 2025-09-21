@@ -249,10 +249,18 @@ const activateProduct = () => {
 }
 
 const editProduct = () => {
-  router.push(router.getRoutes().find((route) => route.name === 'AddProduct')!.path.replace(':id', props.id as string))
+  router.push(
+    router
+      .getRoutes()
+      .find((route) => route.name === 'AddProduct')!
+      .path.replace(':id', props.id as string),
+  )
 }
 
 const billProduct = () => {
-  router.push(router.getRoutes().find((route) => route.name === 'AddInvoice')!.path)
+  router.push({
+    path: router.getRoutes().find((route) => route.name === 'AddInvoice')!.path!,
+    query: { product: props.id },
+  })
 }
 </script>
