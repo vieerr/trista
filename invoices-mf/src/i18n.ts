@@ -56,6 +56,8 @@ export const i18n = createI18n({
         reference: 'Referencia',
         price: 'Precio',
         discount: 'Descuento',
+        taxable_base: 'Base Imponible',
+        subtotal: 'Subtotal',
         tax: 'Impuesto',
         quantity: 'Cantidad',
         total: 'Total',

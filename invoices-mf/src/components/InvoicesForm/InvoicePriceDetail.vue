@@ -1,15 +1,15 @@
 <template>
   <div class="w-1/3 my-10">
     <p class="text-gray-600 my-3 grid grid-cols-2 gap-7">
-      <span class="text-gray-600 font-semibold text-right">Subtotal:</span>
+      <span class="text-gray-600 font-semibold text-right">{{ t('invoices_form.subtotal') }}</span>
       <span class="text-right"> ${{ calculateSubtotal(rows).toFixed(2) }} </span>
     </p>
     <p class="text-gray-600 my-3 grid grid-cols-2 gap-7">
-      <span class="text-gray-600 font-semibold text-right">Discount:</span>
+      <span class="text-gray-600 font-semibold text-right">{{ t('invoices_form.discount') }}:</span>
       <span class="text-right"> -${{ calculateDiscount(rows).toFixed(2) }} </span>
     </p>
     <p class="text-gray-600 my-3 grid grid-cols-2 gap-7">
-      <span class="text-gray-600 font-semibold text-right">Taxable Base:</span>
+      <span class="text-gray-600 font-semibold text-right">{{ t('invoices_form.taxable_base') }}:</span>
       <span class="text-right"> ${{ calculateTaxableBase(rows).toFixed(2) }} </span>
     </p>
     <div
@@ -22,7 +22,7 @@
     </div>
     <Divider />
     <p class="text-gray-600 my-3 grid grid-cols-2 gap-7">
-      <span class="text-gray-600 text-2xl font-semibold text-right">Total:</span>
+      <span class="text-gray-600 text-2xl font-semibold text-right">{{ t('invoices_form.total') }}:</span>
       <span class="text-right text-2xl"> ${{ calculateTotal(rows).toFixed(2) }} </span>
     </p>
   </div>
@@ -33,10 +33,13 @@ import Divider from 'primevue/divider'
 import type { ProductRow } from '@/types'
 import { computed, defineProps } from 'vue'
 import type { Reactive } from 'vue'
+import { useI18n } from 'vue-i18n';
 
 const props = defineProps<{
   rows: Reactive<ProductRow[]>
 }>()
+
+const { t } = useI18n()
 
 const calculateSubtotal = (rows: Reactive<ProductRow[]>): number => {
   return rows.reduce((total, row) => {
