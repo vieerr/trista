@@ -207,12 +207,14 @@ import { formatCurrency } from '@/utils'
 import { ref } from 'vue'
 import { useQueryClient } from '@tanstack/vue-query'
 import { useRouter } from 'vue-router'
+import { useProductStore } from '@/stores/productStore'
 
 const props = defineProps({
   id: String,
 })
 const queryClient = useQueryClient()
 const router = useRouter()
+const productStore = useProductStore()
 
 const { data: invoices } = useQuery({
   queryKey: ['product', props.id],
@@ -249,6 +251,11 @@ const activateProduct = () => {
 }
 
 const editProduct = () => {
+  if (!data?.value) {
+    toast.error('No se puede editar un producto no existente')
+    return
+  }
+  productStore.setSelectedProduct(data.value)
   router.push(
     router
       .getRoutes()
