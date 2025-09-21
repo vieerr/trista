@@ -20,7 +20,7 @@ export default defineConfig({
         './products_css': './src/products.styles.js',
         './ProductsI18n': './src/i18n.ts',
       },
-      shared: ['vue', 'vue-router', 'primevue', 'tailwindcss', 'pinia', '@tanstack/vue-query'],
+      shared: ['vue', 'vue-router', 'tailwindcss', 'pinia', '@tanstack/vue-query'],
     }),
   ],
   server: {

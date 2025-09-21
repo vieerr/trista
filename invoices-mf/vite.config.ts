@@ -25,12 +25,6 @@ export default defineConfig({
       shared: [
         'vue',
         'vue-router',
-        {
-          primevue: {
-            requiredVersion: '^4.3.9',
-            version: '^4.3.9',
-          },
-        },
         'tailwindcss',
         '@tanstack/vue-query',
       ],
