@@ -249,7 +249,7 @@ const activateProduct = () => {
 }
 
 const editProduct = () => {
-  router.push(`/add`)
+  router.push(router.getRoutes().find((route) => route.name === 'AddProduct')!.path.replace(':id', props.id as string))
 }
 
 const billProduct = () => {
