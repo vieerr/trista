@@ -33,3 +33,5 @@ createApp(App)
   .use(VueQueryPlugin)
   .use(pinia)
   .mount("#app");
+
+document.getElementById("loading-screen")?.remove();
