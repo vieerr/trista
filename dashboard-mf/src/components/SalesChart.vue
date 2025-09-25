@@ -13,6 +13,11 @@
     </CardHeader>
     <CardContent>
       <ApexChart type="line" height="300" :options="chartOptions" :series="series" />
+      <div class="text-xs text-gray-800 mt-4 flex items-center gap-2 justify-center">
+        <div class="w-3 h-3 rounded-full" :style="{ backgroundColor: '#0e9f6e' }"></div>
+        <span class="font-medium">{{ startOfMonth.format('D MMM YYYY') }} - </span>
+        <span class="font-medium">{{ endOfMonth.format('D MMM YYYY') }}</span>
+      </div>
     </CardContent>
   </Card>
 </template>
