@@ -57,25 +57,17 @@ import TopCustomers from './TopCustomers.vue'
 import { Card, CardHeader, CardContent } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useQuery } from '@tanstack/vue-query'
-import { getSalesOverTime, getTopCustomers, getTopProducts } from '@/services/analytics'
+import { getDashboardAnalytics } from '@/services/analytics'
 import { computed } from 'vue'
 
-const { data: salesData, isLoading: isSalesDataLoading } = useQuery({
-  queryKey: ['salesData'],
-  queryFn: () => getSalesOverTime(),
+const { data: dashboardData, isLoading: isDashboardLoading } = useQuery({
+  queryKey: ['dashboardAnalytics'],
+  queryFn: () => getDashboardAnalytics(),
 })
 
-const { data: products, isLoading: isProductsLoading } = useQuery({
-  queryKey: ['products'],
-  queryFn: () => getTopProducts(),
-})
+const salesData = computed(() => dashboardData.value?.sales_over_time || [])
+const products = computed(() => dashboardData.value?.top_products || [])
+const customers = computed(() => dashboardData.value?.top_customers || [])
 
-const { data: customers, isLoading: isCustomersLoading } = useQuery({
-  queryKey: ['customers'],
-  queryFn: () => getTopCustomers(),
-})
-
-const isLoading = computed(
-  () => isSalesDataLoading.value || isProductsLoading.value || isCustomersLoading.value,
-)
+const isLoading = computed(() => isDashboardLoading.value)
 </script>
