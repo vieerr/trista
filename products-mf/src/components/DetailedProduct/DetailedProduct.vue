@@ -1,14 +1,11 @@
 <template>
   <Toaster richColors position="top-right" />
   <div class="p-4">
-
     <!-- Action Buttons -->
     <div class="flex gap-2 mb-5"></div>
 
-
     <!-- Content -->
     <div class="grid grid-cols-3 gap-4">
-
       <!-- Left side: product details -->
       <Card class="col-span-2">
         <template #header>
@@ -72,12 +69,10 @@
         </template>
       </Card>
 
-
       <!-- Right side: image & price -->
       <Card>
         <template #content>
           <div class="flex flex-col items-center">
-
             <!-- <img
               :src="data?.image_url"
               alt="Imagen del producto"
@@ -151,15 +146,13 @@
         tableStyle="min-width: 55rem"
         removableSort
       >
-
-      <!-- Checkbox column -->
+        <!-- Checkbox column -->
         <Column selectionMode="multiple" headerStyle="width:3rem"></Column>
 
-
-        <Column field="number" header="Número" sortable headerStyle="width: 5rem"/>
+        <Column field="number" header="Número" sortable headerStyle="width: 5rem" />
         <Column field="client_name" header="Cliente" sortable />
-        <Column field="operation_date" header="Fecha de Operación" sortable/>
-        <Column field="due_date" header="Fecha de Vencimiento" sortable/>
+        <Column field="operation_date" header="Fecha de Operación" sortable />
+        <Column field="due_date" header="Fecha de Vencimiento" sortable />
         <Column field="total" header="Total" sortable>
           <template #body="{ data }">
             {{ formatCurrency(data.total) }}
@@ -218,6 +211,10 @@ const changeProductStatus = useMutation({
     toast.success('Producto actualizado con éxito')
     // Refetch product details
     queryClient.invalidateQueries({ queryKey: ['product-detail', props.id] })
+  },
+  onSettled: () => {
+    queryClient.invalidateQueries({ queryKey: ['dashboardAnalytics'] })
+    queryClient.invalidateQueries({ queryKey: ['products'] })
   },
 })
 

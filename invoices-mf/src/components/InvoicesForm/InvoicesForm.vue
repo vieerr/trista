@@ -198,6 +198,9 @@ const { mutate: createInvoiceMutation } = useMutation({
   onError: () => {
     toast.error('Error al crear la factura')
   },
+  onSettled: () => {
+    queryClient.invalidateQueries({ queryKey: ['dashboardAnalytics'] })
+  },
 })
 
 const redirectAfterCreate = ref(false)

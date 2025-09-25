@@ -161,7 +161,7 @@ import { zodResolver } from '@primevue/forms/resolvers/zod'
 import { productValidator } from '@/validators/ProductValidator'
 import InputNumber from 'primevue/inputnumber'
 import { useI18n } from 'vue-i18n'
-import { useMutation } from '@tanstack/vue-query'
+import { useMutation, useQueryClient } from '@tanstack/vue-query'
 import { createProduct, updateProduct } from '@/services/products'
 import { toast } from 'vue-sonner'
 import type { ZodError } from 'zod'
@@ -182,6 +182,8 @@ interface FormValues {
 const productStore = useProductStore()
 const router = useRouter()
 const { t } = useI18n()
+const queryClient = useQueryClient()
+
 
 const resolver = ref(zodResolver(productValidator))
 const imageForm = ref()
@@ -235,6 +237,9 @@ const { mutate: createProductMutation } = useMutation({
   },
   onError: () => {
     toast.error('Error al crear el producto')
+  },
+  onSettled: () => {
+    queryClient.invalidateQueries({ queryKey: ['dashboardAnalytics'] })
   },
 })
 

@@ -6,7 +6,7 @@
         La gráfica muestra el valor de tus ventas con impuestos incluidos.
         <div>
           <span class="text-2xl font-light text-primary">{{
-            formatCurrency(props.data.reduce((acc, curr) => acc + curr.value, 0))
+            formatCurrency(reactiveData.reduce((acc, curr) => acc + curr.value, 0))
           }}</span>
         </div>
       </CardDescription>
@@ -22,8 +22,10 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/com
 import ApexChart from 'vue3-apexcharts'
 import moment from 'moment'
 import { formatCurrency } from '@/utils'
+import { computed } from 'vue'
 
 const props = defineProps<{ data: { date: string; value: number }[] }>()
+const reactiveData = computed(() => props.data)
 
 // Get all days of current month
 const startOfMonth = moment().startOf('month')
@@ -37,20 +39,22 @@ while (current.isSameOrBefore(endOfMonth)) {
 }
 
 // Build data aligned with all days
-const salesData = allDays.map((day) => {
-  const found = props.data.find((d) => moment(d.date).isSame(day, 'day'))
-  return {
-    x: day, // datetime x
-    y: found ? found.value : 0,
-  }
-})
+const salesData = computed(() =>
+  allDays.map((day) => {
+    const found = reactiveData.value.find((d) => moment(d.date).isSame(day, 'day'))
+    return {
+      x: day,
+      y: found ? found.value : 0,
+    }
+  }),
+)
 
-const series = [
+const series = computed(() => [
   {
     name: 'Ventas',
-    data: salesData,
+    data: salesData.value,
   },
-]
+])
 
 const chartOptions = {
   chart: {
