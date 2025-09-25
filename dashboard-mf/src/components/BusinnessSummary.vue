@@ -43,8 +43,8 @@
     <template v-else>
       <SalesChart :data="salesData" />
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <TopProducts :products="products" />
-        <TopCustomers :customers="customers" />
+        <TrendingTable :data="products" type="products" />
+        <TrendingTable :data="customers" type="customers" />
       </div>
     </template>
   </div>
@@ -52,8 +52,7 @@
 
 <script setup lang="ts">
 import SalesChart from './SalesChart.vue'
-import TopProducts from './TopProducts.vue'
-import TopCustomers from './TopCustomers.vue'
+import TrendingTable from './TrendingTable.vue'
 import { Card, CardHeader, CardContent } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useQuery } from '@tanstack/vue-query'

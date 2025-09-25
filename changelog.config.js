@@ -9,4 +9,5 @@ module.exports = {
     "lerna",
   ],
   scopes: ["dashboard-mf", "invoices-mf", "products-mf", "shell", "general"],
+  maxMessageLength: 90, // Adjust the value as needed
 };
