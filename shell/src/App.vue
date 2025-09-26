@@ -1,14 +1,12 @@
 <template>
-  <div class="flex h-screen bg-slate-100">
+  <div class="flex min-h-screen bg-slate-100">
     <Sidebar />
-    <main class="container py-10 w-5xl min-w-5xl mx-auto ">
-      <div>
-        <RouterView />
-      </div>
+    <main class="flex-1 container mx-auto py-6 px-4 sm:px-3 lg:px-8 max-w-7xl">
+      <RouterView />
     </main>
+    <TreeShakeSurvivors />
+    <VueQueryDevtools initialIsOpen position="bottom" />
   </div>
-  <TreeShakeSurvivors />
-  <VueQueryDevtools initialIsOpen position="bottom" />
 </template>
 
 <script setup lang="ts">
