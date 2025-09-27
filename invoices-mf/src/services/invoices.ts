@@ -1,4 +1,4 @@
-import type { Invoice } from '@/types'
+import type { Invoice, VoiceInvoiceData, VoiceProducts } from '@/types'
 import { getApiBaseUrl } from '@/utils'
 import axios from 'axios'
 
@@ -37,6 +37,24 @@ export const createInvoice = async (invoice: Invoice): Promise<void> => {
     await axios.post(`${getApiBaseUrl()}/invoices`, invoice)
   } catch (error) {
     console.error('Error creating invoice:', error)
+    throw error
+  }
+}
+
+export const processInvoiceAudio = async (audioBlob: Blob): Promise<VoiceInvoiceData> => {
+  try {
+    const formData = new FormData()
+    formData.append('file', audioBlob, 'invoice-audio.webm')
+
+    const response = await axios.post(`${getApiBaseUrl()}/invoices/process-audio`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    })
+
+    return response.data
+  } catch (error) {
+    console.error('Error processing invoice audio:', error)
     throw error
   }
 }

@@ -7,6 +7,7 @@ import { VueQueryPlugin } from '@tanstack/vue-query'
 import { i18n } from './i18n'
 import { router } from './router/router'
 import { ToastService } from 'primevue'
+import { AVPlugin } from 'vue-audio-visual'
 
 createApp(App)
   .use(PrimeVue, {
@@ -23,4 +24,5 @@ createApp(App)
   .use(router)
   .use(ToastService)
   .use(VueQueryPlugin)
+  .use(AVPlugin)
   .mount('#app')

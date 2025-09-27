@@ -55,3 +55,11 @@ export interface InvoicesFormData {
   due_date: Date
   products: ProductRow[]
 }
+
+export interface VoiceInvoiceData{
+  transcription: string,
+  products:{
+    _id: string,
+    count: number
+  }
+}

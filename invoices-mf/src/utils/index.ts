@@ -3,6 +3,12 @@ export const getApiBaseUrl = (): string => {
     ? import.meta.env.VITE_API_URL_PROD
     : import.meta.env.VITE_API_URL_DEV
 }
+
+export const getVoiceAPIBaseUrl = (): string => {
+  return import.meta.env.MODE === 'production'
+    ? import.meta.env.VITE_VOICE_API_URL_PROD
+    : import.meta.env.VITE_VOICE_API_URL_DEV
+}
 export const formatCurrency = (value: number | undefined): string => {
   return `$${value?.toFixed(2).replace('.', ',')}`
 }
