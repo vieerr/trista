@@ -1,5 +1,5 @@
 <template>
-  <div class="flex h-screen">
+  <div class="flex flex-1 h-screen">
     <button
       class="absolute md:hidden top-0 left-4 z-auto p-4 rounded-full hover:bg-green-500 transition text-green-700"
       @click="isOpen = true"
