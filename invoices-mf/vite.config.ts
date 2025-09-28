@@ -26,6 +26,7 @@ export default defineConfig({
         'vue',
         'vue-router',
         'tailwindcss',
+        'pinia',
         '@tanstack/vue-query',
       ],
     }),

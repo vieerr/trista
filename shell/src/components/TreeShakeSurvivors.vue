@@ -19,6 +19,8 @@
   <InputNumber style="display: none" />
   <Textarea style="display: none" />
   <FileUpload style="display: none" hidden />
+  <OverlayBadge style="display: none" />
+  <Dialog style="display: none" />
 </template>
 
 <script setup lang="ts">
@@ -39,6 +41,8 @@ import {
   DatePicker,
   Message,
   Divider,
+  OverlayBadge,
+  Dialog,
 } from "primevue";
 import { Form } from "@primevue/forms";
 </script>
