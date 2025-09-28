@@ -61,5 +61,5 @@ export interface VoiceInvoiceData{
   products:{
     _id: string,
     count: number
-  }
+  }[]
 }

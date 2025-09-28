@@ -137,10 +137,12 @@ import type { ProductRow, Product } from '@/types'
 import InvoicePriceDetail from './InvoicePriceDetail.vue'
 import { InputNumber } from 'primevue'
 import { useRoute } from 'vue-router'
+import { useInvoicesStore } from '@/stores/invoices'
+import { createProductRow, createRow } from '@/utils'
 
 const { t } = useI18n()
 const route = useRoute()
-
+const invoicesStore = useInvoicesStore()
 
 const { data: products } = useQuery({ queryKey: ['products'], queryFn: fetchProducts })
 const productOptions = computed(() => products.value ?? [])
@@ -153,24 +155,7 @@ const taxes = ref([
   { name: 'IVA Tarifa 0', rate: 0 },
 ])
 
-const createRow = (): ProductRow => ({
-  row_id: Date.now().toString(),
-  product: null,
-  quantity: 1,
-  price: 0,
-  discount: 0,
-  tax: taxes.value[1],
-  reference: '',
-})
-
 const rows: Reactive<ProductRow[]> = reactive([createRow()])
-watch(
-  rows,
-  (newRows) => {
-    console.log('Rows changed:', newRows)
-  },
-  { deep: true },
-)
 
 watch(
   () => route.query.product,
@@ -178,20 +163,33 @@ watch(
     if (newProductId && products.value) {
       const prod = products.value.find((p) => p._id === newProductId)
       if (prod) {
-        rows[0] = {
-          ...createRow(),
-          product: prod,
-          price: prod.price || 0,
-          tax: {
-            rate: prod.taxRate || 0,
-            name: prod.taxName || '',
-          },
-          reference: prod.reference,
-        }
+        const newRow = createProductRow(prod, 1)
+        rows.splice(0, 1, newRow)
       }
     }
   },
   { immediate: true },
+)
+
+watch(
+  () => invoicesStore.getVoiceInvoiceData()?.products,
+  (newProducts) => {
+    if (!newProducts?.length) return
+
+    newProducts.forEach((product, index) => {
+      const productFromStore = products.value?.find((p) => p._id === product?._id)
+      if (!productFromStore) return
+
+      const newRow = createProductRow(productFromStore, product.count)
+
+      if (index === 0) {
+        rows.splice(0, 1, newRow)
+      } else {
+        rows.push(newRow)
+      }
+    })
+  },
+  { immediate: true, deep: true },
 )
 
 const addRow = () => {
