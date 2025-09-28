@@ -1,5 +1,5 @@
-import type { Invoice, VoiceInvoiceData, VoiceProducts } from '@/types'
-import { getApiBaseUrl } from '@/utils'
+import type { Invoice, VoiceInvoiceData } from '@/types'
+import { getApiBaseUrl, getVoiceAPIBaseUrl } from '@/utils'
 import axios from 'axios'
 
 export const fetchInvoices = async (): Promise<Invoice[]> => {
@@ -44,9 +44,9 @@ export const createInvoice = async (invoice: Invoice): Promise<void> => {
 export const processInvoiceAudio = async (audioBlob: Blob): Promise<VoiceInvoiceData> => {
   try {
     const formData = new FormData()
-    formData.append('file', audioBlob, 'invoice-audio.webm')
+    formData.append('audio', audioBlob)
 
-    const response = await axios.post(`${getApiBaseUrl()}/invoices/process-audio`, formData, {
+    const response = await axios.post(`${getVoiceAPIBaseUrl()}/process-audio`, formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },

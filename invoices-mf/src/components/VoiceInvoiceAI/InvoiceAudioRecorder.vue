@@ -2,6 +2,10 @@
 import { AVMedia } from 'vue-audio-visual'
 import { reactive, computed, defineProps, ref } from 'vue'
 import { Dialog, Button } from 'primevue'
+import { useMutation } from '@tanstack/vue-query'
+import { processInvoiceAudio } from '@/services/invoices'
+import type { VoiceInvoiceData } from '@/types'
+import { useInvoicesStore } from '@/stores/invoices'
 
 defineProps<{
   open: boolean
@@ -11,6 +15,7 @@ const emit = defineEmits<{
   (e: 'update:open', value: boolean): void
 }>()
 
+const invoicesStore = useInvoicesStore()
 const state = reactive({
   status: 'idle' as 'idle' | 'recording' | 'loading' | 'done' | 'processed',
   mediaStream: null as MediaStream | null,
@@ -19,9 +24,36 @@ const state = reactive({
   audioBlob: null as Blob | null,
 })
 
-// Nueva variable para almacenar la respuesta de la API
 const apiResponse = ref<string>('')
-const apiData = ref<any>(null)
+const apiData = ref<VoiceInvoiceData | null>(null)
+
+const {
+  mutate: processAudio,
+  isPending: isProcessing,
+  isError: hasError,
+  error: apiError,
+} = useMutation({
+  mutationFn: () => {
+    if (!state.audioBlob) {
+      throw new Error('No audio blob available')
+    }
+    return processInvoiceAudio(state.audioBlob)
+  },
+  onSuccess: (data) => {
+    console.log('Server response:', data)
+    apiResponse.value = JSON.stringify(data, null, 2)
+    apiData.value = data
+    if (data) {
+      invoicesStore.setVoiceInvoiceData(data)
+    }
+    state.status = 'processed'
+  },
+  onError: (error) => {
+    console.error('Error processing audio:', error)
+    apiResponse.value = `Error: ${error instanceof Error ? error.message : 'Unknown error'}`
+    state.status = 'done'
+  },
+})
 
 const buttonLabel = computed(() => {
   switch (state.status) {
@@ -56,39 +88,12 @@ const buttonIcon = computed(() => {
   }
 })
 
-// Función para procesar el audio (llamar a la API)
-async function processAudio() {
+function handleProcessAudio() {
   if (!state.audioBlob) return
-
-  state.status = 'loading'
-  const formData = new FormData()
-  formData.append('audio', state.audioBlob, 'recording.webm')
-
-  try {
-    const response = await fetch('http://localhost:3000/process-audio', {
-      method: 'POST',
-      body: formData,
-    })
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`)
-    }
-
-    const result = await response.json()
-    console.log('Server response:', result)
-
-    // Guardar la respuesta para debugging
-    apiResponse.value = JSON.stringify(result, null, 2)
-    apiData.value = result
-    state.status = 'processed'
-  } catch (error) {
-    console.error('Error uploading audio:', error)
-    apiResponse.value = `Error: ${error instanceof Error ? error.message : 'Unknown error'}`
-    state.status = 'done'
-  }
+  processAudio()
 }
 
-// Función para iniciar/detener grabación (sin envío automático)
+// Función para iniciar/detener grabación
 async function startStopRecording() {
   if (state.status === 'idle') {
     try {
@@ -120,10 +125,7 @@ async function startStopRecording() {
     state.status === 'processed'
   ) {
     // Reiniciar
-    state.status = 'idle'
-    state.audioBlob = null
-    apiResponse.value = ''
-    apiData.value = null
+    resetState()
   }
 }
 
@@ -139,12 +141,16 @@ function facturar() {
 function editar() {
   console.log('Editando datos:', apiData.value)
   // Aquí iría la lógica para editar los datos extraídos
-  // Por ahora, solo mostramos un mensaje
   alert('Modo edición - Aquí se podrían modificar los datos extraídos')
 }
 
 // Función para intentar de nuevo
 function intentarDeNuevo() {
+  resetState()
+}
+
+// Función para resetear el estado
+function resetState() {
   state.status = 'idle'
   state.audioBlob = null
   apiResponse.value = ''
@@ -157,16 +163,26 @@ function cancelRecording() {
     state.mediaRecorder?.stop()
     state.mediaStream?.getTracks().forEach((track) => track.stop())
   }
-  state.status = 'idle'
-  state.audioBlob = null
-  apiResponse.value = ''
-  apiData.value = null
+  resetState()
   emit('update:open', false)
 }
 
 function closeModal() {
   cancelRecording()
 }
+
+// Computed para el estado de loading que considera el useQuery
+const isLoadingState = computed(() => {
+  return state.status === 'loading' || isProcessing.value
+})
+
+// Computed para mostrar errores de la API
+const errorMessage = computed(() => {
+  if (apiError.value) {
+    return apiError.value instanceof Error ? apiError.value.message : 'Error desconocido'
+  }
+  return null
+})
 </script>
 
 <template>
@@ -201,11 +217,22 @@ function closeModal() {
           <i class="pi pi-check text-green-600" style="font-size: 2rem"></i>
         </div>
         <div
+          v-else-if="isProcessing"
+          class="flex items-center justify-center w-32 h-32 rounded-full bg-blue-100 border-2 border-blue-400"
+        >
+          <i class="pi pi-spin pi-spinner text-blue-600" style="font-size: 2rem"></i>
+        </div>
+        <div
           v-else
           class="flex items-center justify-center w-32 h-32 rounded-full bg-gray-100 border-2 border-dashed border-gray-400"
         >
           <i class="pi pi-microphone text-gray-400" style="font-size: 2rem"></i>
         </div>
+      </div>
+
+      <!-- Mensaje de error -->
+      <div v-if="hasError" class="w-full p-3 bg-red-100 border border-red-300 rounded-lg">
+        <p class="text-red-700 text-sm">{{ errorMessage }}</p>
       </div>
 
       <!-- Botones durante grabación/procesamiento -->
@@ -215,7 +242,7 @@ function closeModal() {
             size="small"
             :label="buttonLabel"
             :icon="buttonIcon"
-            :disabled="state.status === 'loading'"
+            :disabled="isLoadingState"
             @click="startStopRecording"
           />
 
@@ -223,10 +250,10 @@ function closeModal() {
           <Button
             size="small"
             v-if="state.status === 'loading' || state.status === 'done'"
-            label="Procesar Audio"
-            icon="pi pi-send"
-            @click="processAudio"
-            :disabled="state.status === 'loading' && apiResponse === ''"
+            :label="isProcessing ? 'Procesando...' : 'Procesar Audio'"
+            :icon="isProcessing ? 'pi pi-spin pi-spinner' : 'pi pi-send'"
+            @click="handleProcessAudio"
+            :disabled="isLoadingState"
           />
 
           <!-- Botón de cancelar -->

@@ -123,7 +123,10 @@ import { invoiceSchema } from '@/validators/InvoicesValidator'
 import { useRouter } from 'vue-router'
 import { type ZodError } from 'zod'
 import type { InvoicesFormData } from '@/types'
+import { useInvoicesStore } from '@/stores/invoices'
 
+const invoicesStore = useInvoicesStore()
+console.log(invoicesStore.getVoiceInvoiceData());
 const router = useRouter()
 const queryClient = useQueryClient()
 const { t } = useI18n()
