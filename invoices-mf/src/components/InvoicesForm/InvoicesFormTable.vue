@@ -172,22 +172,26 @@ watch(
 )
 
 watch(
-  () => invoicesStore.getVoiceInvoiceData()?.products,
-  (newProducts) => {
-    if (!newProducts?.length) return
+  [() => invoicesStore.getVoiceInvoiceData()?.products, () => products.value],
+  ([newProducts, productsData]) => {
+    if (!newProducts?.length || !productsData?.length) return
 
-    newProducts.forEach((product, index) => {
-      const productFromStore = products.value?.find((p) => p._id === product?._id)
+    // Clear existing rows first
+    rows.splice(0, rows.length)
+
+    newProducts.forEach((product) => {
+      const productFromStore = productsData.find((p) => p._id === product?._id)
       if (!productFromStore) return
 
       const newRow = createProductRow(productFromStore, product.count)
-
-      if (index === 0) {
-        rows.splice(0, 1, newRow)
-      } else {
-        rows.push(newRow)
-      }
+      console.log(newRow);
+      rows.push(newRow)
     })
+
+    // If no products were added, ensure at least one empty row
+    if (rows.length === 0) {
+      rows.push(createRow())
+    }
   },
   { immediate: true, deep: true },
 )

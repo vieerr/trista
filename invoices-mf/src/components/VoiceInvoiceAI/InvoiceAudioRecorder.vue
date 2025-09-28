@@ -6,6 +6,7 @@ import { useMutation } from '@tanstack/vue-query'
 import { processInvoiceAudio } from '@/services/invoices'
 import type { VoiceInvoiceData } from '@/types'
 import { useInvoicesStore } from '@/stores/invoices'
+import { useRouter } from 'vue-router'
 
 defineProps<{
   open: boolean
@@ -15,6 +16,7 @@ const emit = defineEmits<{
   (e: 'update:open', value: boolean): void
 }>()
 
+const router = useRouter()
 const invoicesStore = useInvoicesStore()
 const state = reactive({
   status: 'idle' as 'idle' | 'recording' | 'loading' | 'done' | 'processed',
@@ -129,28 +131,22 @@ async function startStopRecording() {
   }
 }
 
-// Función para facturar
-function facturar() {
+const facturar = () => {
   console.log('Facturando con datos:', apiData.value)
   // Aquí iría la lógica para crear la factura
   alert('Factura creada exitosamente')
   closeModal()
 }
 
-// Función para editar
-function editar() {
-  console.log('Editando datos:', apiData.value)
-  // Aquí iría la lógica para editar los datos extraídos
-  alert('Modo edición - Aquí se podrían modificar los datos extraídos')
+const editar = () => {
+  router.push(router.getRoutes().find((route) => route.name === 'AddInvoice')!.path)
 }
 
-// Función para intentar de nuevo
-function intentarDeNuevo() {
+const intentarDeNuevo = () => {
   resetState()
 }
 
-// Función para resetear el estado
-function resetState() {
+const resetState = () => {
   state.status = 'idle'
   state.audioBlob = null
   apiResponse.value = ''

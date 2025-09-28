@@ -109,7 +109,7 @@ import DatePicker from 'primevue/datepicker'
 import InputText from 'primevue/inputtext'
 import Button from 'primevue/button'
 import Message from 'primevue/message'
-import { reactive, ref, watch, computed } from 'vue'
+import { reactive, ref, watch, computed, onBeforeUnmount } from 'vue'
 import { Toaster, toast } from 'vue-sonner'
 import { Form } from '@primevue/forms'
 import { zodResolver } from '@primevue/forms/resolvers/zod'
@@ -123,11 +123,12 @@ import { invoiceSchema } from '@/validators/InvoicesValidator'
 import { useRouter } from 'vue-router'
 import { type ZodError } from 'zod'
 import type { InvoicesFormData } from '@/types'
+import { useInvoicesStore } from '@/stores/invoices'
 
 const router = useRouter()
 const queryClient = useQueryClient()
 const { t } = useI18n()
-
+const invoicesStore = useInvoicesStore()
 const tableRef = ref()
 
 const clients = ref([
@@ -273,4 +274,8 @@ const onFormSubmit = ({ redirect = true }: { redirect?: boolean }) => {
     )
   }
 }
+
+onBeforeUnmount(() => {
+  invoicesStore.clearVoiceInvoiceData()
+})
 </script>
