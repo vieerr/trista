@@ -223,7 +223,7 @@ const deleteRow = (row_id: string) => {
 
 const calculateRowTotal = (row: ProductRow) => {
   const priceAfterDiscount = row.price * (1 - row.discount / 100)
-  const taxAmount = priceAfterDiscount * (row.tax.rate / 100)
+  const taxAmount = priceAfterDiscount * (row.tax?.rate ?? 0 / 100)
   return (priceAfterDiscount + taxAmount) * row.quantity
 }
 
@@ -234,8 +234,8 @@ const getProductRows = () => {
     reference: row.reference,
     price: row.price,
     discount: row.discount,
-    taxRate: row.tax.rate,
-    taxName: row.tax.name,
+    taxRate: row.tax?.rate ?? 0,
+    taxName: row.tax?.name ?? 'IVA Tarifa 0',
     quantity: row.quantity,
     total: calculateRowTotal(row),
   }))

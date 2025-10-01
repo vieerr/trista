@@ -2,11 +2,14 @@
 import { AVMedia } from 'vue-audio-visual'
 import { reactive, computed, defineProps, ref } from 'vue'
 import { Dialog, Button } from 'primevue'
-import { useMutation } from '@tanstack/vue-query'
-import { processInvoiceAudio } from '@/services/invoices'
-import type { VoiceInvoiceData } from '@/types'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query'
+import { createInvoice, getInvoicesCount, processInvoiceAudio } from '@/services/invoices'
+import type { Invoice, VoiceInvoiceData } from '@/types'
 import { useInvoicesStore } from '@/stores/invoices'
 import { useRouter } from 'vue-router'
+import moment from 'moment'
+import { fetchProducts } from '@/services/products'
+import { toast } from 'vue-sonner'
 
 defineProps<{
   open: boolean
@@ -16,6 +19,25 @@ const emit = defineEmits<{
   (e: 'update:open', value: boolean): void
 }>()
 
+const queryClient = useQueryClient()
+
+const { mutate: createInvoiceMutation } = useMutation({
+  mutationFn: (newInvoice: Invoice) => createInvoice(newInvoice),
+  onSuccess: () => {
+    toast.success('Factura creada con éxito')
+    queryClient.invalidateQueries({ queryKey: ['invoices'] })
+    queryClient.invalidateQueries({ queryKey: ['invoice-count'] })
+  },
+  onError: () => {
+    toast.error('Error al crear la factura')
+  },
+  onSettled: () => {
+    queryClient.invalidateQueries({ queryKey: ['dashboardAnalytics'] })
+    invoicesStore.clearVoiceInvoiceData()
+  },
+})
+
+const { data: products } = useQuery({ queryKey: ['products'], queryFn: fetchProducts })
 const router = useRouter()
 const invoicesStore = useInvoicesStore()
 const state = reactive({
@@ -131,10 +153,64 @@ async function startStopRecording() {
   }
 }
 
-const facturar = () => {
-  console.log('Facturando con datos:', apiData.value)
-  // Aquí iría la lógica para crear la factura
-  alert('Factura creada exitosamente')
+const mappedProducts = computed(() => {
+  if (!apiData.value?.products?.length || !products.value?.length) return []
+
+  return apiData.value.products
+    .map((item) => {
+      const prod = products.value?.find((p) => p._id === item._id)
+      if (prod) {
+        return {
+          ...prod,
+          count: item.count,
+        }
+      }
+      return null
+    })
+    .filter((p) => p !== null)
+})
+
+const facturar = async () => {
+  const invoiceCount = await getInvoicesCount()
+
+  const invoice: Invoice = {
+    number: invoiceCount + 1 + '',
+    client_id: '0',
+    client_name: 'Consumidor Final',
+    client_official_id: '00000000',
+    client_phone: '098765432',
+    operation_date: moment().format('DD-MM-YYYY'),
+    type: 'Simple',
+    payment_method: 'cash',
+    payment_period: '0',
+    due_date: moment().format('DD-MM-YYYY'),
+    products:
+      mappedProducts.value.map((item) => ({
+        row_id: moment().valueOf().toString(),
+        product: item,
+        reference: item.reference,
+        price: item.price,
+        discount: 0,
+        taxName: item.taxName || 'IVA Tarifa 0',
+        taxRate: item.taxRate || 0,
+        description: item.description,
+        quantity: item.count,
+        total: (item.price || 0) * (item.count || 0),
+      })) || [],
+    subtotal: mappedProducts.value.reduce(
+      (sum, item) => sum + (item.price || 0) * (item.count || 0),
+      0,
+    ),
+    discount: 0,
+    taxable_base: 0,
+    taxes: { 'IVA Tarifa 0': 0 },
+
+    total: 0,
+    created_at: moment().format('DD-MM-YYYY HH:mm:ss'),
+    status: 'Paid',
+  }
+
+  createInvoiceMutation(invoice)
   closeModal()
 }
 
