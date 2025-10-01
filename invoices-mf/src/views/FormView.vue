@@ -2,10 +2,13 @@
 import InvoicesForm from '@/components/InvoicesForm/InvoicesForm.vue'
 import { useI18n } from 'vue-i18n'
 import { Card } from 'primevue'
+import { Toaster } from 'vue-sonner'
 const { t } = useI18n()
 </script>
 
 <template>
+  <Toaster richColors position="top-right" />
+
   <Card class="mb-5" shadow="shadow-2">
     <template #title>
       {{ t('invoices_form.title') }}
