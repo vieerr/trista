@@ -1,8 +1,8 @@
-// Primevue components being used on microfrontends should be imported here to avoid tree shaking
-// them away when building the shell application.
+// Primevue components being used on microfrontends should be imported here to
+avoid tree shaking // them away when building the shell application.
 <template>
   <Button style="display: none" label="shell" />
-  <DataTable paginator  style="display: none" />
+  <DataTable paginator style="display: none" />
   <Column style="display: none" />
   <Form style="display: none" />
   <Fieldset style="display: none" />
@@ -21,11 +21,14 @@
   <FileUpload style="display: none" hidden />
   <OverlayBadge style="display: none" />
   <Dialog style="display: none" />
+  <Toolbar style="display: none" />
+  <Image style="display: none" />
 </template>
 
 <script setup lang="ts">
 import {
   Checkbox,
+  Image,
   Card,
   FileUpload,
   Textarea,
@@ -43,6 +46,7 @@ import {
   Divider,
   OverlayBadge,
   Dialog,
+  Toolbar,
 } from "primevue";
 import { Form } from "@primevue/forms";
 </script>
