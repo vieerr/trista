@@ -223,7 +223,7 @@ const deleteRow = (row_id: string) => {
 
 const calculateRowTotal = (row: ProductRow) => {
   const priceAfterDiscount = row.price * (1 - row.discount / 100)
-  const taxAmount = priceAfterDiscount * (row.tax?.rate ?? 0 / 100)
+  const taxAmount = priceAfterDiscount * (row.tax?.rate ?? 0) / 100
   return (priceAfterDiscount + taxAmount) * row.quantity
 }
 
